@@ -1,0 +1,507 @@
+import { useState, useEffect, useRef } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Users,
+  Calendar,
+  Waves,
+  Trees,
+  Flame,
+  Wifi,
+  Thermometer,
+  ShieldCheck,
+  MapPin,
+  Mountain,
+  Star,
+  MessageCircle,
+  Heart,
+  Home,
+  ArrowRight,
+  X,
+  Menu,
+  AlertTriangle,
+  Shield,
+  Lock,
+  Droplet,
+  Map,
+  Compass,
+  Award,
+  Bed,
+  Bath,
+} from "lucide-react";
+
+const COLORS = {
+  cream: "#F5EACF",
+  creamLight: "#FAF5E8",
+  brown: "#8A584C",
+  brownDark: "#6B4237",
+  brownLight: "#A8796D",
+  green: "#4F583D",
+  greenDark: "#3A422D",
+  greenLight: "#6B7553",
+};
+
+const WHATSAPP_URL =
+  "https://wa.me/5493546000000?text=Hola%20Casa%20Tejado!%20Me%20gustar%C3%ADa%20consultar%20disponibilidad%20para%2010%20personas.";
+
+const heroImages = [
+  "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1920&q=80",
+  "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1920&q=80",
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80",
+];
+
+const galleryImages = [
+  { src: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80", alt: "Vista exterior" },
+  { src: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=80", alt: "Living comedor" },
+  { src: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80", alt: "Pileta y parque" },
+  { src: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&q=80", alt: "Baño" },
+  { src: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80", alt: "Cocina" },
+  { src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80", alt: "Dormitorio principal" },
+];
+
+const amenities = [
+  { icon: Home, title: "Departamento Privado Extra", desc: "Ideal para privacidad grupal. Espacio independiente con baño propio." },
+  { icon: Waves, title: "Pileta & Parque 600m²", desc: "Amplio parque arbolado con pileta de agua cristalina." },
+  { icon: Flame, title: "Asador & Cochera", desc: "Parrilla completa y cochera techada para 2 autos." },
+  { icon: Wifi, title: "WiFi de Alta Velocidad", desc: "Conexión estable para trabajo remoto o streaming." },
+  { icon: Thermometer, title: "Calefacción Central", desc: "Confort garantizado en todas las estaciones del año." },
+  { icon: ShieldCheck, title: "Seguridad Certificada", desc: "Detector de monóxido de carbono y botiquín completo." },
+];
+
+const reviews = [
+  { name: "Mariana L.", source: "Airbnb", rating: 5, text: "Lugar increíble, súper cómodo para ir con familia grande. El parque es hermoso y la pileta estaba impecable.", date: "Enero 2026", avatar: "M" },
+  { name: "Carlos D.", source: "Google", rating: 5, text: "Excelente ubicación, a minutos del río. La casa es amplia y tiene todo lo necesario. Repetimos seguro.", date: "Diciembre 2025", avatar: "C" },
+  { name: "Lucía & Fede", source: "Airbnb", rating: 5, text: "El departamento privado fue ideal para nosotros. Nuestros amigos en la casa principal y nosotros con total intimidad.", date: "Febrero 2026", avatar: "L" },
+  { name: "Roberto M.", source: "Google", rating: 4, text: "Muy linda propiedad, bien mantenida. Disfrutamos mucho del asador y las noches en el parque. Muy recomendable.", date: "Noviembre 2025", avatar: "R" },
+];
+
+const nearbyPlaces = [
+  { name: "Río Anisacate", distance: "800m", icon: Droplet },
+  { name: "La Bolsa", distance: "700m", icon: MapPin },
+  { name: "Alta Gracia", distance: "8km", icon: Map },
+  { name: "Villa Gral. Belgrano", distance: "44km", icon: Mountain },
+];
+
+function useInView() {
+  const ref = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setIsVisible(true); observer.unobserve(entry.target); }
+    }, { threshold: 0.12 });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  return [ref, isVisible];
+}
+
+function AnimatedSection({ children, className = "", delay = 0 }) {
+  const [ref, isVisible] = useInView();
+  return (
+    <div ref={ref} className={className} style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? "translateY(0)" : "translateY(36px)", transition: `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s` }}>
+      {children}
+    </div>
+  );
+}
+
+function SectionTitle({ eyebrow, title, subtitle, light = false }) {
+  return (
+    <div style={{ textAlign: "center", marginBottom: "3rem" }}>
+      {eyebrow && <span style={{ display: "inline-block", fontSize: "0.7rem", letterSpacing: "0.25em", textTransform: "uppercase", marginBottom: "0.75rem", fontWeight: 600, color: light ? COLORS.creamLight : COLORS.green, fontFamily: "'Source Sans 3', sans-serif" }}>{eyebrow}</span>}
+      <h2 style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)", marginBottom: "1rem", lineHeight: 1.2, fontFamily: "'Libre Baskerville', serif", color: light ? COLORS.cream : COLORS.brownDark }}>{title}</h2>
+      {subtitle && <p style={{ fontSize: "1.05rem", maxWidth: "38rem", margin: "0 auto", lineHeight: 1.7, fontFamily: "'Source Sans 3', sans-serif", color: light ? "rgba(245,234,207,0.8)" : COLORS.brownLight }}>{subtitle}</p>}
+    </div>
+  );
+}
+
+function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  useEffect(() => {
+    const handler = () => setScrolled(window.scrollY > 60);
+    window.addEventListener("scroll", handler, { passive: true });
+    return () => window.removeEventListener("scroll", handler);
+  }, []);
+  const links = [{ label: "Inicio", href: "#hero" }, { label: "Amenidades", href: "#amenidades" }, { label: "Galería", href: "#galeria" }, { label: "Ubicación", href: "#ubicacion" }, { label: "Reseñas", href: "#resenas" }];
+  const go = (href) => { setMenuOpen(false); document.querySelector(href)?.scrollIntoView({ behavior: "smooth" }); };
+
+  return (
+    <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, transition: "all 0.5s", background: scrolled ? "rgba(245,234,207,0.97)" : "transparent", backdropFilter: scrolled ? "blur(12px)" : "none", borderBottom: scrolled ? "1px solid rgba(138,88,76,0.12)" : "1px solid transparent", boxShadow: scrolled ? "0 2px 24px rgba(138,88,76,0.08)" : "none" }}>
+      <div style={{ maxWidth: "80rem", margin: "0 auto", padding: "0 1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: "4.5rem" }}>
+        <button onClick={() => go("#hero")} style={{ display: "flex", alignItems: "center", gap: "0.5rem", background: "none", border: "none", cursor: "pointer" }}>
+          <div style={{ width: "2.25rem", height: "2.25rem", borderRadius: "0.5rem", display: "flex", alignItems: "center", justifyContent: "center", background: scrolled ? COLORS.brown : "rgba(255,255,255,0.15)", transition: "all 0.3s" }}>
+            <Home size={18} color={scrolled ? COLORS.cream : "#fff"} />
+          </div>
+          <span style={{ fontSize: "1.1rem", fontWeight: 700, fontFamily: "'Libre Baskerville', serif", color: scrolled ? COLORS.brownDark : "#fff" }}>Casa Tejado</span>
+        </button>
+        <div style={{ display: "flex", alignItems: "center", gap: "2rem" }}>
+          {links.map((l) => (
+            <button key={l.href} onClick={() => go(l.href)} style={{ fontSize: "0.85rem", fontWeight: 600, background: "none", border: "none", cursor: "pointer", fontFamily: "'Source Sans 3', sans-serif", color: scrolled ? COLORS.brownDark : "rgba(255,255,255,0.9)", transition: "opacity 0.3s" }}>{l.label}</button>
+          ))}
+          <button onClick={() => go("#reservar")} style={{ padding: "0.5rem 1.25rem", borderRadius: "999px", fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", fontFamily: "'Source Sans 3', sans-serif", background: scrolled ? COLORS.brown : "rgba(255,255,255,0.15)", color: scrolled ? COLORS.cream : "#fff", border: scrolled ? "none" : "1px solid rgba(255,255,255,0.3)", transition: "all 0.3s" }}>Reservar</button>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+function HeroSection() {
+  const [ci, setCi] = useState(0);
+  useEffect(() => { const t = setInterval(() => setCi((i) => (i + 1) % heroImages.length), 6000); return () => clearInterval(t); }, []);
+
+  return (
+    <section id="hero" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+      {heroImages.map((src, i) => (
+        <div key={i} style={{ position: "absolute", inset: 0, backgroundImage: `url(${src})`, backgroundSize: "cover", backgroundPosition: "center", opacity: ci === i ? 1 : 0, transition: "opacity 2s ease" }} />
+      ))}
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(58,66,45,0.45) 0%, rgba(107,66,55,0.55) 60%, rgba(107,66,55,0.75) 100%)" }} />
+
+      <div style={{ position: "relative", zIndex: 10, textAlign: "center", padding: "0 1.5rem", maxWidth: "52rem", margin: "0 auto" }}>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 1rem", borderRadius: "999px", marginBottom: "2rem", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.2)" }}>
+          <MapPin size={14} color={COLORS.cream} />
+          <span style={{ fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "'Source Sans 3', sans-serif", color: COLORS.cream }}>Anisacate, Córdoba — Sierras Chicas</span>
+        </div>
+
+        <h1 style={{ fontSize: "clamp(2.2rem, 5.5vw, 4.2rem)", lineHeight: 1.1, marginBottom: "1.5rem", fontFamily: "'Libre Baskerville', serif", color: "#fff" }}>
+          Tranquilidad y Confort<br /><span style={{ color: COLORS.cream }}>en el Corazón de Anisacate</span>
+        </h1>
+
+        <p style={{ fontSize: "clamp(0.95rem, 2vw, 1.2rem)", marginBottom: "2.5rem", maxWidth: "36rem", margin: "0 auto 2.5rem", lineHeight: 1.7, fontFamily: "'Source Sans 3', sans-serif", color: "rgba(245,234,207,0.85)" }}>
+          Casa amplia con departamento privado para grupos de hasta 10 personas. Tu refugio en las sierras.
+        </p>
+
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: "1rem" }}>
+          <button onClick={() => document.querySelector("#reservar")?.scrollIntoView({ behavior: "smooth" })} style={{ display: "inline-flex", alignItems: "center", gap: "0.75rem", padding: "1rem 2rem", borderRadius: "999px", fontSize: "1rem", fontWeight: 700, fontFamily: "'Source Sans 3', sans-serif", background: COLORS.brown, color: COLORS.cream, border: "none", cursor: "pointer", transition: "all 0.3s" }}>
+            Ver Disponibilidad <ArrowRight size={18} />
+          </button>
+          <button onClick={() => document.querySelector("#galeria")?.scrollIntoView({ behavior: "smooth" })} style={{ padding: "1rem 2rem", borderRadius: "999px", fontSize: "1rem", fontWeight: 600, fontFamily: "'Source Sans 3', sans-serif", color: "#fff", border: "1px solid rgba(255,255,255,0.35)", background: "rgba(255,255,255,0.08)", cursor: "pointer" }}>
+            Ver Fotos
+          </button>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "2.5rem", marginTop: "3.5rem", paddingTop: "2rem", borderTop: "1px solid rgba(255,255,255,0.15)", flexWrap: "wrap" }}>
+          {[{ icon: Users, label: "Hasta 10 huéspedes" }, { icon: Bed, label: "4 dormitorios" }, { icon: Bath, label: "2 baños completos" }, { icon: Trees, label: "Parque 600m²" }].map((item, i) => (
+            <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem" }}>
+              <item.icon size={20} color="rgba(245,234,207,0.7)" />
+              <span style={{ fontSize: "0.7rem", fontFamily: "'Source Sans 3', sans-serif", color: "rgba(245,234,207,0.7)" }}>{item.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ position: "absolute", bottom: "2rem", left: "50%", transform: "translateX(-50%)", display: "flex", gap: "0.5rem" }}>
+        {heroImages.map((_, i) => (
+          <button key={i} onClick={() => setCi(i)} style={{ width: "0.5rem", height: "0.5rem", borderRadius: "50%", border: "none", cursor: "pointer", background: ci === i ? COLORS.cream : "rgba(255,255,255,0.35)", transform: ci === i ? "scale(1.4)" : "scale(1)", transition: "all 0.5s" }} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function BookingBar() {
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+  const [guests, setGuests] = useState(2);
+
+  return (
+    <div id="reservar" style={{ background: COLORS.creamLight, position: "relative", zIndex: 40, borderBottom: `2px solid ${COLORS.cream}` }}>
+      <div style={{ maxWidth: "72rem", margin: "0 auto", padding: "1.25rem 1.5rem" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", gap: "1rem" }}>
+          <div style={{ flex: "1 1 180px" }}>
+            <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 700, marginBottom: "0.35rem", letterSpacing: "0.1em", textTransform: "uppercase", fontFamily: "'Source Sans 3', sans-serif", color: COLORS.green }}>Check-in</label>
+            <div style={{ position: "relative" }}>
+              <Calendar size={16} style={{ position: "absolute", left: "0.75rem", top: "50%", transform: "translateY(-50%)", color: COLORS.brownLight, pointerEvents: "none" }} />
+              <input type="date" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} style={{ width: "100%", paddingLeft: "2.5rem", paddingRight: "0.75rem", paddingTop: "0.75rem", paddingBottom: "0.75rem", borderRadius: "0.75rem", border: "1px solid rgba(138,88,76,0.15)", fontSize: "0.85rem", fontFamily: "'Source Sans 3', sans-serif", background: "#fff", color: COLORS.brownDark, outline: "none" }} />
+            </div>
+          </div>
+          <div style={{ flex: "1 1 180px" }}>
+            <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 700, marginBottom: "0.35rem", letterSpacing: "0.1em", textTransform: "uppercase", fontFamily: "'Source Sans 3', sans-serif", color: COLORS.green }}>Check-out</label>
+            <div style={{ position: "relative" }}>
+              <Calendar size={16} style={{ position: "absolute", left: "0.75rem", top: "50%", transform: "translateY(-50%)", color: COLORS.brownLight, pointerEvents: "none" }} />
+              <input type="date" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} style={{ width: "100%", paddingLeft: "2.5rem", paddingRight: "0.75rem", paddingTop: "0.75rem", paddingBottom: "0.75rem", borderRadius: "0.75rem", border: "1px solid rgba(138,88,76,0.15)", fontSize: "0.85rem", fontFamily: "'Source Sans 3', sans-serif", background: "#fff", color: COLORS.brownDark, outline: "none" }} />
+            </div>
+          </div>
+          <div style={{ width: "12rem" }}>
+            <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 700, marginBottom: "0.35rem", letterSpacing: "0.1em", textTransform: "uppercase", fontFamily: "'Source Sans 3', sans-serif", color: COLORS.green }}>Huéspedes</label>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderRadius: "0.75rem", border: "1px solid rgba(138,88,76,0.15)", padding: "0.5rem 0.75rem", background: "#fff" }}>
+              <button onClick={() => setGuests(Math.max(1, guests - 1))} style={{ width: "2rem", height: "2rem", borderRadius: "0.5rem", display: "flex", alignItems: "center", justifyContent: "center", background: COLORS.cream, border: "none", cursor: "pointer", fontSize: "1.1rem", fontWeight: 700, color: COLORS.brown }}>−</button>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <Users size={16} color={COLORS.brownLight} />
+                <span style={{ fontSize: "0.85rem", fontWeight: 700, fontFamily: "'Source Sans 3', sans-serif", color: COLORS.brownDark }}>{guests}</span>
+              </div>
+              <button onClick={() => setGuests(Math.min(10, guests + 1))} style={{ width: "2rem", height: "2rem", borderRadius: "0.5rem", display: "flex", alignItems: "center", justifyContent: "center", background: COLORS.cream, border: "none", cursor: "pointer", fontSize: "1.1rem", fontWeight: 700, color: COLORS.brown }}>+</button>
+            </div>
+          </div>
+          <button onClick={() => window.open(WHATSAPP_URL, "_blank")} style={{ padding: "0.75rem 2rem", borderRadius: "0.75rem", fontSize: "0.85rem", fontWeight: 700, fontFamily: "'Source Sans 3', sans-serif", background: COLORS.brown, color: COLORS.cream, border: "none", cursor: "pointer" }}>Consultar</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AmenitiesSection() {
+  return (
+    <section id="amenidades" style={{ padding: "5rem 1.5rem", background: COLORS.creamLight }}>
+      <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
+        <AnimatedSection><SectionTitle eyebrow="Lo que ofrecemos" title="Comodidades para Disfrutar" subtitle="Cada detalle pensado para que tu estadía sea perfecta." /></AnimatedSection>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1.25rem" }}>
+          {amenities.map((a, i) => (
+            <AnimatedSection key={i} delay={i * 0.08}>
+              <div style={{ padding: "2rem", borderRadius: "1rem", background: "#fff", border: "1px solid rgba(138,88,76,0.08)" }}>
+                <div style={{ width: "3.5rem", height: "3.5rem", borderRadius: "0.75rem", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.25rem", background: `linear-gradient(135deg, ${COLORS.cream}, rgba(138,88,76,0.1))` }}>
+                  <a.icon size={26} color={COLORS.brown} />
+                </div>
+                <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.5rem", fontFamily: "'Libre Baskerville', serif", color: COLORS.brownDark }}>{a.title}</h3>
+                <p style={{ fontSize: "0.85rem", lineHeight: 1.7, fontFamily: "'Source Sans 3', sans-serif", color: COLORS.brownLight }}>{a.desc}</p>
+              </div>
+            </AnimatedSection>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function GallerySection() {
+  const [sel, setSel] = useState(null);
+  return (
+    <section id="galeria" style={{ padding: "5rem 1.5rem", background: "#fff" }}>
+      <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
+        <AnimatedSection><SectionTitle eyebrow="Conocé el espacio" title="Galería de Fotos" subtitle="Amplios ambientes, detalles cuidados y espacios para el disfrute." /></AnimatedSection>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.75rem" }}>
+          {galleryImages.map((img, i) => (
+            <AnimatedSection key={i} delay={i * 0.06}>
+              <button onClick={() => setSel(i)} style={{ position: "relative", overflow: "hidden", borderRadius: "1rem", border: "none", padding: 0, cursor: "pointer", width: "100%", gridColumn: i === 0 ? "span 2" : "auto", gridRow: i === 0 ? "span 2" : "auto", aspectRatio: "4/3" }}>
+                <img src={img.src} alt={img.alt} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+              </button>
+            </AnimatedSection>
+          ))}
+        </div>
+      </div>
+      {sel !== null && (
+        <div onClick={() => setSel(null)} style={{ position: "fixed", inset: 0, zIndex: 999, background: "rgba(0,0,0,0.92)", display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
+          <button onClick={() => setSel(null)} style={{ position: "absolute", top: "1rem", right: "1rem", background: "none", border: "none", cursor: "pointer" }}><X size={28} color="#fff" /></button>
+          <button onClick={(e) => { e.stopPropagation(); setSel((sel - 1 + galleryImages.length) % galleryImages.length); }} style={{ position: "absolute", left: "1rem", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer" }}><ChevronLeft size={32} color="#fff" /></button>
+          <img src={galleryImages[sel].src} alt={galleryImages[sel].alt} onClick={(e) => e.stopPropagation()} style={{ maxWidth: "100%", maxHeight: "85vh", borderRadius: "0.5rem", objectFit: "contain" }} />
+          <button onClick={(e) => { e.stopPropagation(); setSel((sel + 1) % galleryImages.length); }} style={{ position: "absolute", right: "1rem", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer" }}><ChevronRight size={32} color="#fff" /></button>
+        </div>
+      )}
+    </section>
+  );
+}
+
+function CalendarSection() {
+  const today = new Date();
+  const [month, setMonth] = useState(today.getMonth());
+  const [year, setYear] = useState(today.getFullYear());
+  const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+  const dayNames = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sá", "Do"];
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
+  const bookedDays = new Set([5, 6, 7, 12, 13, 14, 20, 21, 22, 23]);
+  const prevMonth = () => { if (month === 0) { setMonth(11); setYear(year - 1); } else setMonth(month - 1); };
+  const nextMonth = () => { if (month === 11) { setMonth(0); setYear(year + 1); } else setMonth(month + 1); };
+
+  return (
+    <section style={{ padding: "5rem 1.5rem", background: COLORS.cream }}>
+      <div style={{ maxWidth: "48rem", margin: "0 auto" }}>
+        <AnimatedSection><SectionTitle eyebrow="Planificá tu estadía" title="Disponibilidad" subtitle="Consultá las fechas libres y reservá tu escapada a las sierras." /></AnimatedSection>
+        <AnimatedSection delay={0.15}>
+          <div style={{ background: "#fff", borderRadius: "1.5rem", padding: "2.5rem", boxShadow: "0 4px 24px rgba(138,88,76,0.08)", border: "1px solid rgba(138,88,76,0.08)" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
+              <button onClick={prevMonth} style={{ padding: "0.5rem", background: "none", border: "none", cursor: "pointer" }}><ChevronLeft size={20} color={COLORS.brown} /></button>
+              <h3 style={{ fontSize: "1.25rem", fontWeight: 700, fontFamily: "'Libre Baskerville', serif", color: COLORS.brownDark }}>{monthNames[month]} {year}</h3>
+              <button onClick={nextMonth} style={{ padding: "0.5rem", background: "none", border: "none", cursor: "pointer" }}><ChevronRight size={20} color={COLORS.brown} /></button>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "0.35rem", marginBottom: "0.35rem" }}>
+              {dayNames.map((d) => (<div key={d} style={{ textAlign: "center", padding: "0.5rem", fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", fontFamily: "'Source Sans 3', sans-serif", color: COLORS.greenLight }}>{d}</div>))}
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "0.35rem" }}>
+              {Array.from({ length: firstDay }).map((_, i) => <div key={`e-${i}`} />)}
+              {Array.from({ length: daysInMonth }).map((_, i) => {
+                const day = i + 1;
+                const isBooked = bookedDays.has(day);
+                const isPast = year === today.getFullYear() && month === today.getMonth() && day < today.getDate();
+                return (<div key={day} style={{ aspectRatio: "1", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "0.75rem", fontSize: "0.85rem", fontWeight: 600, fontFamily: "'Source Sans 3', sans-serif", background: isBooked ? "rgba(138,88,76,0.08)" : "transparent", color: isPast ? "rgba(138,88,76,0.3)" : isBooked ? COLORS.brownLight : COLORS.brownDark, textDecoration: isBooked ? "line-through" : "none" }}>{day}</div>);
+              })}
+            </div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "1.5rem", marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid rgba(138,88,76,0.08)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}><div style={{ width: "0.75rem", height: "0.75rem", borderRadius: "0.2rem", background: COLORS.creamLight, border: "1px solid rgba(138,88,76,0.15)" }} /><span style={{ fontSize: "0.75rem", fontFamily: "'Source Sans 3', sans-serif", color: COLORS.brownLight }}>Disponible</span></div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}><div style={{ width: "0.75rem", height: "0.75rem", borderRadius: "0.2rem", background: "rgba(138,88,76,0.12)" }} /><span style={{ fontSize: "0.75rem", fontFamily: "'Source Sans 3', sans-serif", color: COLORS.brownLight }}>Reservado</span></div>
+            </div>
+          </div>
+        </AnimatedSection>
+      </div>
+    </section>
+  );
+}
+
+function LocationSection() {
+  return (
+    <section id="ubicacion" style={{ padding: "5rem 1.5rem", background: COLORS.green }}>
+      <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
+        <AnimatedSection><SectionTitle light eyebrow="Dónde estamos" title="Ubicación Estratégica" subtitle="Rodeada de naturaleza, con todo al alcance de la mano." /></AnimatedSection>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "1.5rem" }}>
+          <AnimatedSection delay={0.1}>
+            <div style={{ borderRadius: "1rem", overflow: "hidden", height: "100%", minHeight: "350px", boxShadow: "0 8px 32px rgba(0,0,0,0.2)", border: "2px solid rgba(245,234,207,0.15)" }}>
+              <iframe title="Ubicación Casa Tejado" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13616.9!2d-64.407!3d-31.72!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x942d6650b5765021%3A0x6790c6ee2e23df4c!2sAnisacate%2C%20C%C3%B3rdoba!5e0!3m2!1ses!2sar!4v1700000000000!5m2!1ses!2sar" style={{ width: "100%", height: "100%", border: 0, filter: "sepia(15%) saturate(85%)" }} allowFullScreen loading="lazy" />
+            </div>
+          </AnimatedSection>
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <AnimatedSection delay={0.15}>
+              <div style={{ borderRadius: "1rem", padding: "2rem", background: "rgba(245,234,207,0.08)", border: "1px solid rgba(245,234,207,0.12)" }}>
+                <h3 style={{ fontSize: "1.25rem", fontWeight: 700, marginBottom: "1.25rem", fontFamily: "'Libre Baskerville', serif", color: COLORS.cream }}>Distancias Clave</h3>
+                {nearbyPlaces.map((p, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.85rem 0", borderBottom: i < nearbyPlaces.length - 1 ? "1px solid rgba(245,234,207,0.08)" : "none" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                      <div style={{ width: "2.5rem", height: "2.5rem", borderRadius: "0.75rem", display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(245,234,207,0.1)" }}><p.icon size={18} color={COLORS.cream} /></div>
+                      <span style={{ fontWeight: 600, fontSize: "0.85rem", fontFamily: "'Source Sans 3', sans-serif", color: "rgba(245,234,207,0.9)" }}>{p.name}</span>
+                    </div>
+                    <span style={{ padding: "0.25rem 0.75rem", borderRadius: "999px", fontSize: "0.75rem", fontWeight: 700, fontFamily: "'Source Sans 3', sans-serif", background: "rgba(245,234,207,0.1)", color: COLORS.cream }}>{p.distance}</span>
+                  </div>
+                ))}
+              </div>
+            </AnimatedSection>
+            <AnimatedSection delay={0.25}>
+              <div style={{ borderRadius: "1rem", padding: "2rem", background: "rgba(245,234,207,0.08)", border: "1px solid rgba(245,234,207,0.12)" }}>
+                <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "1rem", fontFamily: "'Libre Baskerville', serif", color: COLORS.cream }}>Puntos de Interés Cercanos</h3>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                  {["Volcano", "La Serranita", "Complejo Pavón", "Río La Bolsa", "Cascada Los Chorrillos", "Alta Gracia Centro"].map((p) => (
+                    <span key={p} style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 1rem", borderRadius: "999px", fontSize: "0.75rem", fontWeight: 600, fontFamily: "'Source Sans 3', sans-serif", background: "rgba(245,234,207,0.06)", border: "1px solid rgba(245,234,207,0.12)", color: "rgba(245,234,207,0.8)" }}>
+                      <Compass size={12} />{p}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </AnimatedSection>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ReviewsSection() {
+  return (
+    <section id="resenas" style={{ padding: "5rem 1.5rem", background: COLORS.creamLight }}>
+      <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
+        <AnimatedSection><SectionTitle eyebrow="Lo que dicen nuestros huéspedes" title="Experiencias Reales" subtitle="Más de 50 reseñas de 5 estrellas en las principales plataformas." /></AnimatedSection>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "1rem", marginBottom: "3rem" }}>
+          {reviews.map((r, i) => (
+            <AnimatedSection key={i} delay={i * 0.08}>
+              <div style={{ padding: "1.5rem", borderRadius: "1rem", background: "#fff", border: "1px solid rgba(138,88,76,0.06)", height: "100%", display: "flex", flexDirection: "column" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
+                  <div style={{ width: "2.5rem", height: "2.5rem", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.85rem", fontWeight: 700, background: COLORS.brown, color: COLORS.cream, fontFamily: "'Source Sans 3', sans-serif" }}>{r.avatar}</div>
+                  <div>
+                    <p style={{ fontSize: "0.85rem", fontWeight: 700, fontFamily: "'Source Sans 3', sans-serif", color: COLORS.brownDark }}>{r.name}</p>
+                    <p style={{ fontSize: "0.7rem", fontFamily: "'Source Sans 3', sans-serif", color: COLORS.brownLight }}>{r.source} · {r.date}</p>
+                  </div>
+                </div>
+                <div style={{ display: "flex", gap: "0.2rem", marginBottom: "0.75rem" }}>
+                  {Array.from({ length: r.rating }).map((_, j) => (<Star key={j} size={14} fill="#D4A853" color="#D4A853" />))}
+                </div>
+                <p style={{ fontSize: "0.85rem", lineHeight: 1.7, flex: 1, fontFamily: "'Source Sans 3', sans-serif", color: COLORS.brownLight }}>"{r.text}"</p>
+              </div>
+            </AnimatedSection>
+          ))}
+        </div>
+        <AnimatedSection delay={0.3}>
+          <div style={{ borderRadius: "1rem", padding: "1.5rem 2rem", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "1rem", background: COLORS.cream, border: "1px solid rgba(138,88,76,0.08)" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+              <div style={{ width: "3rem", height: "3rem", borderRadius: "0.75rem", display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(138,88,76,0.08)" }}><Shield size={24} color={COLORS.brown} /></div>
+              <div>
+                <p style={{ fontSize: "0.85rem", fontWeight: 700, fontFamily: "'Source Sans 3', sans-serif", color: COLORS.brownDark }}>Huésped Seguro</p>
+                <p style={{ fontSize: "0.7rem", fontFamily: "'Source Sans 3', sans-serif", color: COLORS.brownLight }}>Certificación de seguridad</p>
+              </div>
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
+              {[{ icon: Heart, label: "Botiquín" }, { icon: AlertTriangle, label: "Detector CO" }, { icon: Award, label: "Limpieza Pro" }, { icon: Lock, label: "Cerradura Segura" }].map((b, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 0.75rem", borderRadius: "0.5rem", background: "rgba(79,88,61,0.06)" }}>
+                  <b.icon size={16} color={COLORS.green} /><span style={{ fontSize: "0.75rem", fontWeight: 600, fontFamily: "'Source Sans 3', sans-serif", color: COLORS.green }}>{b.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </AnimatedSection>
+      </div>
+    </section>
+  );
+}
+
+function CTASection() {
+  return (
+    <section style={{ position: "relative", padding: "6rem 1.5rem", overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: 0, backgroundImage: "url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80)", backgroundSize: "cover", backgroundPosition: "center" }} />
+      <div style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, ${COLORS.brownDark}ee, ${COLORS.greenDark}dd)` }} />
+      <div style={{ position: "relative", zIndex: 10, maxWidth: "48rem", margin: "0 auto", textAlign: "center" }}>
+        <AnimatedSection>
+          <Star size={32} color={COLORS.cream} style={{ margin: "0 auto 1.5rem", display: "block" }} />
+          <h2 style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)", marginBottom: "1.25rem", fontFamily: "'Libre Baskerville', serif", color: "#fff" }}>Tu Escapada a las Sierras<br />Te Espera</h2>
+          <p style={{ fontSize: "1.05rem", marginBottom: "2rem", maxWidth: "32rem", margin: "0 auto 2rem", fontFamily: "'Source Sans 3', sans-serif", color: "rgba(245,234,207,0.8)", lineHeight: 1.7 }}>Reservá ahora y asegurá tu lugar en Casa Tejado. Grupos, familias y amigos — hay espacio para todos.</p>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: "1rem" }}>
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: "0.75rem", padding: "1rem 2rem", borderRadius: "999px", fontSize: "1rem", fontWeight: 700, fontFamily: "'Source Sans 3', sans-serif", background: "#25D366", color: "#fff", textDecoration: "none" }}>
+              <MessageCircle size={20} />Escribinos por WhatsApp
+            </a>
+            <button onClick={() => document.querySelector("#reservar")?.scrollIntoView({ behavior: "smooth" })} style={{ padding: "1rem 2rem", borderRadius: "999px", fontSize: "1rem", fontWeight: 600, fontFamily: "'Source Sans 3', sans-serif", color: "#fff", border: "1px solid rgba(255,255,255,0.35)", background: "rgba(255,255,255,0.08)", cursor: "pointer" }}>Ver Disponibilidad</button>
+          </div>
+        </AnimatedSection>
+      </div>
+    </section>
+  );
+}
+
+function Footer() {
+  return (
+    <footer style={{ padding: "3rem 1.5rem", background: COLORS.brownDark }}>
+      <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "1.5rem", marginBottom: "2rem", paddingBottom: "2rem", borderBottom: "1px solid rgba(245,234,207,0.1)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            <Home size={22} color={COLORS.cream} />
+            <span style={{ fontSize: "1.25rem", fontWeight: 700, fontFamily: "'Libre Baskerville', serif", color: COLORS.cream }}>Casa Tejado</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <MapPin size={14} color="rgba(245,234,207,0.6)" />
+            <span style={{ fontSize: "0.85rem", fontFamily: "'Source Sans 3', sans-serif", color: "rgba(245,234,207,0.6)" }}>Anisacate, Córdoba, Argentina</span>
+          </div>
+        </div>
+        <p style={{ fontSize: "0.75rem", textAlign: "center", fontFamily: "'Source Sans 3', sans-serif", color: "rgba(245,234,207,0.4)" }}>© {new Date().getFullYear()} Casa Tejado. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+  );
+}
+
+function WhatsAppFAB() {
+  return (
+    <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" style={{ position: "fixed", bottom: "1.5rem", right: "1.5rem", zIndex: 50, textDecoration: "none" }}>
+      <div style={{ width: "4rem", height: "4rem", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", background: "#25D366", boxShadow: "0 4px 24px rgba(37,211,102,0.4)" }}>
+        <MessageCircle size={28} color="#fff" fill="#fff" />
+      </div>
+    </a>
+  );
+}
+
+export default function CasaTejado() {
+  return (
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600;700;900&display=swap');
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Source Sans 3', sans-serif; background: ${COLORS.creamLight}; color: ${COLORS.brownDark}; -webkit-font-smoothing: antialiased; }
+      `}</style>
+      <Navbar />
+      <HeroSection />
+      <BookingBar />
+      <AmenitiesSection />
+      <GallerySection />
+      <CalendarSection />
+      <LocationSection />
+      <ReviewsSection />
+      <CTASection />
+      <Footer />
+      <WhatsAppFAB />
+    </>
+  );
+}
