@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Oasis Boutique — Departamento de diseño premium con pileta. Reserva directo por WhatsApp, mejor tarifa garantizada." />
+  <title>Oasis Boutique — Alquiler Vacacional Premium</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            canvas: '#F6F2FF',
+            plum: '#491D8B',
+            teal: '#009D9A',
+            wa: '#25D366',
+            'wa-dk': '#1EBE5A',
+          },
+          fontFamily: {
+            outfit: ['Outfit', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:90px}
+    body{font-family:'Outfit',sans-serif;background:#F6F2FF;color:#491D8B;font-size:16px}
+
+    /* Mosaic */
+    .mosaic{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:195px 195px;gap:5px}
+    .mosaic .m0{grid-column:1;grid-row:1/3}
+    @media(min-width:768px){.mosaic{grid-template-columns:1.6fr 1fr 1fr;grid-template-rows:245px 245px;gap:8px}.mosaic .m0{grid-column:1;grid-row:1/3}}
+    @media(min-width:1024px){.mosaic{grid-template-rows:285px 285px;gap:10px}}
+    .mosaic .c{overflow:hidden;border-radius:14px;position:relative;cursor:pointer}
+    .mosaic .c img{width:100%;height:100%;object-fit:cover;transition:transform .5s cubic-bezier(.22,1,.36,1)}
+    .mosaic .c:hover img{transform:scale(1.05)}
+
+    /* Sticky */
+    .sbar{transition:box-shadow .3s,background-color .3s}
+    .sbar.stuck{box-shadow:0 4px 28px rgba(73,29,139,.09);background:rgba(246,242,255,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+
+    /* Reveal */
+    .rv{opacity:0;transform:translateY(22px);transition:opacity .55s cubic-bezier(.22,1,.36,1),transform .55s cubic-bezier(.22,1,.36,1)}
+    .rv.vis{opacity:1;transform:translateY(0)}
+
+    /* Amenity card */
+    .amc{transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s}
+    .amc:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(73,29,139,.07)}
+
+    /* Reviews */
+    .rtr{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px}
+    .rtr::-webkit-scrollbar{display:none}
+    .rc{scroll-snap-align:start;flex-shrink:0}
+
+    /* Field */
+    .fld:focus{outline:none;box-shadow:0 0 0 3px rgba(0,157,154,.28);border-color:#009D9A}
+
+    /* Badge */
+    .badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,157,154,.1);color:#009D9A;font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.09em;padding:4px 12px;border-radius:999px}
+
+    /* Lightbox */
+    .lb{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.93);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+    .lb.open{opacity:1;pointer-events:auto}
+    .lb img{max-width:92vw;max-height:82vh;object-fit:contain;border-radius:10px}
+    .lb-b{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:none;background:rgba(255,255,255,.12);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(6px);transition:background .2s}
+    .lb-b:hover{background:rgba(255,255,255,.25)}
+    .lb-p{left:16px}.lb-n{right:16px}
+    .lb-x{position:absolute;top:16px;right:16px;width:48px;height:48px;border-radius:50%;border:none;background:rgba(255,255,255,.1);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(6px);transition:background .2s}
+    .lb-x:hover{background:rgba(255,255,255,.25)}
+    .lb-c{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.6);font-family:'Outfit',sans-serif;font-size:.85rem}
+
+    /* Popover */
+    .popover{opacity:0;transform:translateY(6px) scale(.97);pointer-events:none;transition:opacity .2s,transform .2s}
+    .popover.show{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+
+    /* WA tooltip */
+    .wa-tip{opacity:0;transform:translateX(10px) scale(.95);pointer-events:none;transition:opacity .3s,transform .3s}
+    .wa-wrap:hover .wa-tip{opacity:1;transform:translateX(0) scale(1);pointer-events:auto}
+
+    /* Counter btn */
+    .cnt{width:36px;height:36px;border-radius:50%;border:2px solid #491D8B20;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:600;color:#491D8B;cursor:pointer;background:#fff;transition:border-color .2s;user-select:none}
+    .cnt:hover{border-color:#009D9A;color:#009D9A}
+    .cnt:disabled{opacity:.3;cursor:not-allowed}
+    .cnt:disabled:hover{border-color:#491D8B20;color:#491D8B}
+
+    /* Toast */
+    .toast{position:fixed;top:100px;left:50%;transform:translateX(-50%) translateY(-12px);z-index:9998;background:#491D8B;color:#fff;font-family:'Outfit',sans-serif;font-size:.875rem;font-weight:500;padding:12px 24px;border-radius:12px;box-shadow:0 8px 32px rgba(73,29,139,.2);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;white-space:nowrap}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+
+    /* Focus ring for date */
+    .date-alert{animation:ring .6s ease}
+    @keyframes ring{0%,100%{box-shadow:0 0 0 0 rgba(255,131,43,0)}50%{box-shadow:0 0 0 4px rgba(255,131,43,.4)}}
+  </style>
+</head>
+
+<body class="antialiased">
+
+  <!-- TOAST -->
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+  <!-- LIGHTBOX -->
+  <div id="lb" class="lb" role="dialog" aria-modal="true" aria-label="Galería de fotos">
+    <button class="lb-x" id="lbX" aria-label="Cerrar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    <button class="lb-b lb-p" id="lbP" aria-label="Anterior"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg></button>
+    <img id="lbI" src="" alt="" />
+    <button class="lb-b lb-n" id="lbN" aria-label="Siguiente"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>
+    <div class="lb-c" id="lbC"></div>
+  </div>
+
+  <!-- ═══ S1 — HEADER + ÁLBUM ═══ -->
+  <header class="relative overflow-hidden" aria-labelledby="h1">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 md:pt-8">
+      <div class="flex items-center justify-between mb-5 md:mb-7 relative z-10">
+        <a href="#" class="font-outfit font-extrabold text-[1.35rem] md:text-2xl tracking-tight text-plum">Oasis Boutique</a>
+        <span class="badge"><svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>4.9 · Superhost</span>
+      </div>
+
+      <div class="mosaic" id="grid">
+        <div class="c m0" data-i="0"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=960&q=80" alt="Living luminoso con ventanales" loading="eager" fetchpriority="high" /></div>
+        <div class="c" data-i="1"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=480&q=75" alt="Dormitorio principal" loading="eager" /></div>
+        <div class="c hidden md:block" data-i="2"><img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=480&q=75" alt="Cocina abierta" loading="eager" /></div>
+        <div class="c" data-i="3"><img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=480&q=75" alt="Baño artesanal" loading="lazy" /></div>
+        <div class="c hidden md:block relative" data-i="4">
+          <img src="https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?auto=format&fit=crop&w=480&q=75" alt="Balcón al atardecer" loading="lazy" />
+          <div class="absolute inset-0 bg-plum/50 flex items-center justify-center text-white font-outfit font-semibold text-sm pointer-events-none">
+            <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>Ver todas las fotos
+          </div>
+        </div>
+      </div>
+
+      <div class="relative z-10 max-w-2xl pt-10 pb-6 md:pt-14 md:pb-8">
+        <h1 id="h1" class="font-outfit font-extrabold text-[1.85rem] sm:text-4xl md:text-5xl lg:text-[3.3rem] leading-[1.1] text-plum mb-5">Un Oasis Boutique<br class="hidden sm:block" /> Diseñado para tu Descanso.</h1>
+        <p class="font-outfit font-light text-plum/70 text-base sm:text-lg md:text-xl leading-relaxed max-w-xl">Más que un lugar para dormir, una experiencia creada para desconectar. Sumérgete en espacios de diseño vanguardista, luz natural y confort de primer nivel.</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ S2 — BOOKING BAR STICKY ═══ -->
+  <aside id="sbar" class="sbar sticky top-0 z-40 bg-canvas border-b border-plum/[0.06]" role="search" aria-label="Motor de reservas">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-end gap-3 sm:gap-4">
+        <!-- Llegada -->
+        <div class="flex-1 min-w-0">
+          <label for="ci" class="block text-[0.65rem] font-outfit font-semibold uppercase tracking-widest text-plum/55 mb-1">Llegada</label>
+          <input type="date" id="ci" class="fld w-full bg-white border border-plum/12 rounded-lg px-4 py-2.5 font-outfit text-sm text-plum transition" />
+        </div>
+        <!-- Salida -->
+        <div class="flex-1 min-w-0">
+          <label for="co" class="block text-[0.65rem] font-outfit font-semibold uppercase tracking-widest text-plum/55 mb-1">Salida</label>
+          <input type="date" id="co" class="fld w-full bg-white border border-plum/12 rounded-lg px-4 py-2.5 font-outfit text-sm text-plum transition" />
+        </div>
+        <!-- Huéspedes popover -->
+        <div class="flex-1 min-w-0 relative">
+          <label class="block text-[0.65rem] font-outfit font-semibold uppercase tracking-widest text-plum/55 mb-1">Huéspedes</label>
+          <button type="button" id="gBtn" class="fld w-full bg-white border border-plum/12 rounded-lg px-4 py-2.5 font-outfit text-sm text-plum text-left transition flex items-center justify-between min-h-[44px]" aria-expanded="false" aria-controls="gPop">
+            <span id="gLabel">2 Adultos - 0 Niños</span>
+            <svg class="w-4 h-4 text-plum/40 flex-shrink-0 ml-2 transition-transform" id="gChev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div id="gPop" class="popover absolute left-0 right-0 top-full mt-2 bg-white rounded-xl border border-plum/10 shadow-xl p-5 z-50" role="group" aria-label="Seleccionar huéspedes">
+            <div class="flex items-center justify-between mb-4">
+              <div><p class="font-outfit font-semibold text-plum text-sm">Adultos</p><p class="font-outfit font-light text-plum/50 text-xs">13 años o más</p></div>
+              <div class="flex items-center gap-3">
+                <button type="button" class="cnt" id="adM" aria-label="Menos adultos">−</button>
+                <span class="font-outfit font-semibold text-plum text-base w-6 text-center" id="adC">2</span>
+                <button type="button" class="cnt" id="adP" aria-label="Más adultos">+</button>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <div><p class="font-outfit font-semibold text-plum text-sm">Niños</p><p class="font-outfit font-light text-plum/50 text-xs">0 – 12 años</p></div>
+              <div class="flex items-center gap-3">
+                <button type="button" class="cnt" id="kiM" aria-label="Menos niños">−</button>
+                <span class="font-outfit font-semibold text-plum text-base w-6 text-center" id="kiC">0</span>
+                <button type="button" class="cnt" id="kiP" aria-label="Más niños">+</button>
+              </div>
+            </div>
+            <button type="button" id="gApply" class="mt-5 w-full bg-plum text-white font-outfit font-semibold text-sm py-2.5 rounded-lg hover:bg-plum/90 transition-colors min-h-[44px]">Aplicar</button>
+          </div>
+        </div>
+        <!-- CTA WhatsApp -->
+        <button type="button" id="waCta" class="sm:flex-shrink-0 bg-wa text-white font-outfit font-bold text-sm px-8 py-3 rounded-lg hover:bg-wa-dk transition-colors shadow-lg shadow-wa/20 focus:outline-none focus:ring-2 focus:ring-wa focus:ring-offset-2 min-h-[48px] flex items-center justify-center gap-2">
+          <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Consultar por WhatsApp
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- ═══ S3 — AMENIDADES ═══ -->
+    <section id="amenidades" class="py-20 md:py-28 relative overflow-hidden" aria-labelledby="am-h">
+      <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-12 md:mb-16 rv">
+          <span class="badge mb-4">Amenidades</span>
+          <h2 id="am-h" class="font-outfit font-extrabold text-2xl sm:text-3xl md:text-4xl text-plum leading-tight">Detalles Pensados para Ti.</h2>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
+          <div class="amc rv bg-white rounded-2xl p-5 md:p-6 border border-plum/[0.05] text-center">
+            <div class="w-11 h-11 mx-auto mb-3 bg-teal/10 rounded-xl flex items-center justify-center"><svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.14 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg></div>
+            <p class="font-outfit font-semibold text-plum text-sm">Wi-Fi</p>
+          </div>
+          <div class="amc rv bg-white rounded-2xl p-5 md:p-6 border border-plum/[0.05] text-center" style="transition-delay:.04s">
+            <div class="w-11 h-11 mx-auto mb-3 bg-teal/10 rounded-xl flex items-center justify-center"><svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M4 16h16M4 16V8a4 4 0 014-4h1"/><circle cx="9" cy="8" r="1" fill="currentColor"/></svg></div>
+            <p class="font-outfit font-semibold text-plum text-sm">1 Baño</p>
+          </div>
+          <div class="amc rv bg-white rounded-2xl p-5 md:p-6 border border-plum/[0.05] text-center" style="transition-delay:.08s">
+            <div class="w-11 h-11 mx-auto mb-3 bg-teal/10 rounded-xl flex items-center justify-center"><svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7v11a2 2 0 002 2h14a2 2 0 002-2V7M3 7l9-4 9 4M12 22V3"/></svg></div>
+            <p class="font-outfit font-semibold text-plum text-sm">2 Habitaciones</p>
+          </div>
+          <div class="amc rv bg-white rounded-2xl p-5 md:p-6 border border-plum/[0.05] text-center" style="transition-delay:.12s">
+            <div class="w-11 h-11 mx-auto mb-3 bg-teal/10 rounded-xl flex items-center justify-center"><svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 11h.01M11 15h.01M16 16a4 4 0 01-8 0V5a2 2 0 012-2h4a2 2 0 012 2v11z"/><path stroke-linecap="round" d="M9 9h6"/></svg></div>
+            <p class="font-outfit font-semibold text-plum text-sm">Cocina</p>
+          </div>
+          <div class="amc rv bg-white rounded-2xl p-5 md:p-6 border border-plum/[0.05] text-center" style="transition-delay:.16s">
+            <div class="w-11 h-11 mx-auto mb-3 bg-teal/10 rounded-xl flex items-center justify-center"><svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+            <p class="font-outfit font-semibold text-plum text-sm">TV Smart</p>
+          </div>
+          <div class="amc rv bg-white rounded-2xl p-5 md:p-6 border border-plum/[0.05] text-center" style="transition-delay:.2s">
+            <div class="w-11 h-11 mx-auto mb-3 bg-teal/10 rounded-xl flex items-center justify-center"><svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 12m0 0c-2.5-4-1-8 2-9m-2 9c-4.33-1.5-7 1-7 4m7-4c4.33-1.5 7 1 7 4m-7-4c2.5 4 1 8-2 9m2-9c-4.33 1.5-7-1-7-4m7 4c4.33 1.5 7-1 7-4"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></div>
+            <p class="font-outfit font-semibold text-plum text-sm">Ventiladores</p>
+          </div>
+          <div class="amc rv bg-white rounded-2xl p-5 md:p-6 border border-plum/[0.05] text-center" style="transition-delay:.24s">
+            <div class="w-11 h-11 mx-auto mb-3 bg-teal/10 rounded-xl flex items-center justify-center"><svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2 15c1.5 1.5 3.5 1.5 5 0s3.5-1.5 5 0 3.5 1.5 5 0 3.5-1.5 5 0M2 19c1.5 1.5 3.5 1.5 5 0s3.5-1.5 5 0 3.5 1.5 5 0 3.5-1.5 5 0M5 11V5a2 2 0 012-2h10a2 2 0 012 2v6"/></svg></div>
+            <p class="font-outfit font-semibold text-plum text-sm">Pileta</p>
+          </div>
+          <div class="amc rv bg-white rounded-2xl p-5 md:p-6 border border-plum/[0.05] text-center" style="transition-delay:.28s">
+            <div class="w-11 h-11 mx-auto mb-3 bg-teal/10 rounded-xl flex items-center justify-center"><svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v4M12 14v4M16 14v4"/></svg></div>
+            <p class="font-outfit font-semibold text-plum text-sm">Cochera (1 auto)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ S4 — RESEÑAS ═══ -->
+    <section class="py-20 md:py-28 bg-plum/[0.025]" aria-labelledby="rv-h">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl mb-10 md:mb-14 rv">
+          <span class="badge mb-4">Reseñas Verificadas</span>
+          <h2 id="rv-h" class="font-outfit font-extrabold text-2xl sm:text-3xl md:text-4xl text-plum leading-tight">La Experiencia, Contada por Nuestros Huéspedes.</h2>
+        </div>
+        <div class="rtr rv" role="list">
+          <!-- R1 -->
+          <article class="rc w-[310px] sm:w-96 bg-white rounded-2xl p-6 border border-plum/[0.06] shadow-sm" role="listitem">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-full bg-teal/15 flex items-center justify-center font-outfit font-bold text-teal text-sm">ML</div>
+              <div><p class="font-outfit font-semibold text-plum text-sm">Martín L.</p><p class="font-outfit text-plum/45 text-xs">hace 2 semanas</p></div>
+              <svg class="ml-auto w-5 h-5 text-plum/15" viewBox="0 0 24 24" fill="currentColor" aria-label="Google"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            </div>
+            <div class="flex gap-0.5 mb-3" aria-label="5 de 5 estrellas"><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+            <p class="font-outfit font-light text-plum/70 text-sm leading-relaxed">"Un departamento increíble. La decoración impecable, la ubicación inmejorable. Se nota el cuidado en cada detalle. Sin duda, el mejor alojamiento de nuestro viaje. ¡La pileta es espectacular!"</p>
+          </article>
+          <!-- R2 -->
+          <article class="rc w-[310px] sm:w-96 bg-white rounded-2xl p-6 border border-plum/[0.06] shadow-sm" role="listitem">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-full bg-wa/15 flex items-center justify-center font-outfit font-bold text-wa text-sm">CF</div>
+              <div><p class="font-outfit font-semibold text-plum text-sm">Carolina F.</p><p class="font-outfit text-plum/45 text-xs">hace 1 mes</p></div>
+              <svg class="ml-auto w-5 h-5 text-plum/15" viewBox="0 0 24 24" fill="currentColor" aria-label="Google"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            </div>
+            <div class="flex gap-0.5 mb-3" aria-label="5 de 5 estrellas"><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+            <p class="font-outfit font-light text-plum/70 text-sm leading-relaxed">"Nos encantó todo. Comunicación súper ágil, el depto es tal cual las fotos, hermoso y con todo lo necesario. La cama es espectacular y la zona perfecta para caminar. Volveríamos sin dudarlo."</p>
+          </article>
+          <!-- R3 -->
+          <article class="rc w-[310px] sm:w-96 bg-white rounded-2xl p-6 border border-plum/[0.06] shadow-sm" role="listitem">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-full bg-plum/10 flex items-center justify-center font-outfit font-bold text-plum text-sm">RA</div>
+              <div><p class="font-outfit font-semibold text-plum text-sm">Roberto A.</p><p class="font-outfit text-plum/45 text-xs">hace 3 semanas</p></div>
+              <svg class="ml-auto w-5 h-5 text-plum/15" viewBox="0 0 24 24" fill="currentColor" aria-label="Google"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            </div>
+            <div class="flex gap-0.5 mb-3" aria-label="5 de 5 estrellas"><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+            <p class="font-outfit font-light text-plum/70 text-sm leading-relaxed">"Superó todas las expectativas. El diseño es de revista, se nota la inversión en calidad: ropa de cama, electrodomésticos, todo premium. Comunicación excelente. 100% recomendable."</p>
+          </article>
+        </div>
+        <div class="mt-8 rv"><a href="#" class="inline-flex items-center gap-2 text-teal font-outfit font-semibold text-sm hover:underline focus:outline-none focus:ring-2 focus:ring-teal rounded min-h-[48px]" target="_blank" rel="noopener noreferrer">Leer las reseñas en Google Maps <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg></a></div>
+      </div>
+    </section>
+
+    <!-- ═══ S5 — MAPA ═══ -->
+    <section class="py-20 md:py-28" aria-labelledby="ub-h">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl mb-12 md:mb-16 rv">
+          <span class="badge mb-4">Ubicación</span>
+          <h2 id="ub-h" class="font-outfit font-extrabold text-2xl sm:text-3xl md:text-4xl text-plum leading-tight">En el Centro de Todo,<br class="hidden sm:block" /> Lejos del Ruido.</h2>
+        </div>
+        <div class="grid md:grid-cols-5 gap-8 md:gap-12 items-start">
+          <div class="md:col-span-2 space-y-4 rv">
+            <div class="flex items-start gap-4 bg-white/70 rounded-xl p-5 border border-plum/[0.05]"><span class="text-2xl flex-shrink-0" aria-hidden="true">📍</span><div><p class="font-outfit font-semibold text-plum text-sm">Centro Histórico</p><p class="font-outfit font-light text-plum/60 text-sm">A 5 min. caminando del Centro Histórico.</p></div></div>
+            <div class="flex items-start gap-4 bg-white/70 rounded-xl p-5 border border-plum/[0.05]"><span class="text-2xl flex-shrink-0" aria-hidden="true">☕</span><div><p class="font-outfit font-semibold text-plum text-sm">Circuito Gastronómico</p><p class="font-outfit font-light text-plum/60 text-sm">A 200m del circuito gastronómico.</p></div></div>
+            <div class="flex items-start gap-4 bg-white/70 rounded-xl p-5 border border-plum/[0.05]"><span class="text-2xl flex-shrink-0" aria-hidden="true">🌳</span><div><p class="font-outfit font-semibold text-plum text-sm">Parque Nacional</p><p class="font-outfit font-light text-plum/60 text-sm">A 10 min. en auto del Parque Nacional.</p></div></div>
+            <div class="flex items-start gap-4 bg-white/70 rounded-xl p-5 border border-plum/[0.05]"><span class="text-2xl flex-shrink-0" aria-hidden="true">✈️</span><div><p class="font-outfit font-semibold text-plum text-sm">Aeropuerto</p><p class="font-outfit font-light text-plum/60 text-sm">A 25 min. del Aeropuerto.</p></div></div>
+          </div>
+          <div class="md:col-span-3 rv" style="transition-delay:.1s">
+            <div class="bg-white/50 border border-plum/8 rounded-2xl overflow-hidden shadow-sm" style="min-height:380px">
+              <div class="relative w-full" style="padding-bottom:70%">
+                <iframe class="absolute inset-0 w-full h-full" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3404.2!2d-64.1811!3d-31.4201!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z!5e0!3m2!1ses!2sar!4v1700000000000" style="border:0" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Ubicación"></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-plum text-white/75 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div><p class="font-outfit font-bold text-white text-lg mb-1">Oasis Boutique</p><p class="font-outfit font-light text-white/45 text-sm">Reserva directo · Mejor tarifa garantizada</p></div>
+      <nav aria-label="Enlaces del pie"><ul class="flex flex-wrap justify-center gap-6 font-outfit text-sm text-white/45"><li><a href="#" class="hover:text-teal transition-colors">Políticas</a></li><li><a href="#" class="hover:text-teal transition-colors">Reglas</a></li><li><a href="#" class="hover:text-teal transition-colors">FAQ</a></li></ul></nav>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 border-t border-white/10 mt-8 pt-6 text-center"><p class="font-outfit text-xs text-white/30">© 2025 Oasis Boutique. Todos los derechos reservados.</p></div>
+  </footer>
+
+  <!-- ═══ S6 — WHATSAPP FLOTANTE ═══ -->
+  <div class="wa-wrap fixed bottom-6 right-6 z-50 flex items-center gap-3">
+    <div class="wa-tip bg-white rounded-xl px-4 py-2.5 shadow-xl border border-plum/[0.06] max-w-[210px] relative">
+      <p class="font-outfit font-medium text-plum text-xs leading-snug">¿Dudas sobre tus fechas? ¡Hablemos!</p>
+      <div class="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-white border-r border-b border-plum/[0.06] rotate-[-45deg]"></div>
+    </div>
+    <a id="waFloat" href="#" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp" class="relative flex items-center justify-center w-14 h-14 bg-wa rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-wa focus:ring-offset-2">
+      <span class="absolute inset-0 rounded-full bg-wa animate-ping opacity-20"></span>
+      <svg class="w-7 h-7 text-white relative z-10" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      <span class="absolute -top-0.5 -right-0.5 w-4 h-4 bg-wa rounded-full border-2 border-canvas flex items-center justify-center"><span class="text-white text-[8px] font-outfit font-bold">1</span></span>
+    </a>
+  </div>
+
+  <!-- ═══ JAVASCRIPT ═══ -->
+  <script>
+    const PHONE = '5491100000000'; // ← Reemplaza con tu número real
+
+    // ── Helpers ──
+    function formatDateES(dateStr) {
+      const [y, m, d] = dateStr.split('-');
+      return `${d}/${m}/${y}`;
+    }
+
+    function showToast(msg, ms = 3000) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), ms);
+    }
+
+    // ── A) Sticky bar shadow ──
+    const sbar = document.getElementById('sbar');
+    window.addEventListener('scroll', () => sbar.classList.toggle('stuck', scrollY > 100), { passive: true });
+
+    // ── B) Lightbox ──
+    const photos = [
+      { src: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85', alt: 'Living luminoso' },
+      { src: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85', alt: 'Dormitorio principal' },
+      { src: 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=1200&q=85', alt: 'Cocina abierta' },
+      { src: 'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85', alt: 'Baño artesanal' },
+      { src: 'https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?auto=format&fit=crop&w=1200&q=85', alt: 'Balcón al atardecer' },
+      { src: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=85', alt: 'Fachada con jardín' },
+      { src: 'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=1200&q=85', alt: 'Pileta con deck' },
+      { src: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=85', alt: 'Segunda habitación' },
+    ];
+    let ci2 = 0;
+    const ol = document.getElementById('lb'), lbI = document.getElementById('lbI'), lbC = document.getElementById('lbC');
+    function lbShow(i) { ci2 = i; lbI.src = photos[ci2].src; lbI.alt = photos[ci2].alt; lbC.textContent = `${ci2+1} / ${photos.length}`; }
+    function lbOpen(i) { lbShow(i); ol.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function lbClose() { ol.classList.remove('open'); document.body.style.overflow = ''; }
+    document.getElementById('grid').addEventListener('click', e => { const c = e.target.closest('[data-i]'); if (c) lbOpen(+c.dataset.i); });
+    document.getElementById('lbX').addEventListener('click', lbClose);
+    document.getElementById('lbN').addEventListener('click', () => lbShow((ci2+1) % photos.length));
+    document.getElementById('lbP').addEventListener('click', () => lbShow((ci2-1+photos.length) % photos.length));
+    ol.addEventListener('click', e => { if (e.target === ol) lbClose(); });
+    document.addEventListener('keydown', e => { if (!ol.classList.contains('open')) return; if (e.key === 'Escape') lbClose(); if (e.key === 'ArrowRight') lbShow((ci2+1) % photos.length); if (e.key === 'ArrowLeft') lbShow((ci2-1+photos.length) % photos.length); });
+
+    // ── C) Guest popover ──
+    let adults = 2, kids = 0;
+    const gBtn = document.getElementById('gBtn'), gPop = document.getElementById('gPop'), gLabel = document.getElementById('gLabel'), gChev = document.getElementById('gChev');
+    const adCEl = document.getElementById('adC'), kiCEl = document.getElementById('kiC');
+    const adMB = document.getElementById('adM'), adPB = document.getElementById('adP'), kiMB = document.getElementById('kiM'), kiPB = document.getElementById('kiP');
+
+    function updLabel() { gLabel.textContent = `${adults} Adulto${adults !== 1 ? 's' : ''} - ${kids} Niño${kids !== 1 ? 's' : ''}`; }
+    function updBtns() { adMB.disabled = adults <= 1; adPB.disabled = adults >= 10; kiMB.disabled = kids <= 0; kiPB.disabled = kids >= 6; adCEl.textContent = adults; kiCEl.textContent = kids; }
+    function togglePop(f) { const open = typeof f === 'boolean' ? f : !gPop.classList.contains('show'); gPop.classList.toggle('show', open); gBtn.setAttribute('aria-expanded', open); gChev.style.transform = open ? 'rotate(180deg)' : ''; }
+
+    gBtn.addEventListener('click', e => { e.stopPropagation(); togglePop(); });
+    adPB.addEventListener('click', e => { e.stopPropagation(); if (adults < 10) { adults++; updBtns(); } });
+    adMB.addEventListener('click', e => { e.stopPropagation(); if (adults > 1) { adults--; updBtns(); } });
+    kiPB.addEventListener('click', e => { e.stopPropagation(); if (kids < 6) { kids++; updBtns(); } });
+    kiMB.addEventListener('click', e => { e.stopPropagation(); if (kids > 0) { kids--; updBtns(); } });
+    document.getElementById('gApply').addEventListener('click', e => { e.stopPropagation(); updLabel(); togglePop(false); });
+    document.addEventListener('click', e => { if (!gBtn.contains(e.target) && !gPop.contains(e.target)) togglePop(false); });
+    updBtns();
+
+    // ── D) WhatsApp CTA (sticky bar) — dynamic message ──
+    const ciInput = document.getElementById('ci');
+    const coInput = document.getElementById('co');
+
+    document.getElementById('waCta').addEventListener('click', () => {
+      const ciVal = ciInput.value;
+      const coVal = coInput.value;
+
+      // Validate dates
+      if (!ciVal || !coVal) {
+        showToast('📅 Por favor, seleccioná las fechas de llegada y salida.');
+        const target = !ciVal ? ciInput : coInput;
+        target.focus();
+        target.classList.add('date-alert');
+        setTimeout(() => target.classList.remove('date-alert'), 700);
+        return;
+      }
+
+      const d1 = new Date(ciVal);
+      const d2 = new Date(coVal);
+
+      if (d2 <= d1) {
+        showToast('⚠️ La fecha de salida debe ser posterior a la de llegada.');
+        coInput.focus();
+        coInput.classList.add('date-alert');
+        setTimeout(() => coInput.classList.remove('date-alert'), 700);
+        return;
+      }
+
+      const nights = Math.round((d2 - d1) / (1000 * 60 * 60 * 24));
+      const fIn = formatDateES(ciVal);
+      const fOut = formatDateES(coVal);
+
+      const msg = `Hola, ¿cómo estás? Me gustaría consultar disponibilidad y tarifa para Oasis Boutique.\n🗓️ Fechas: ${fIn} → ${fOut} (${nights} noche${nights !== 1 ? 's' : ''})\n👥 Huéspedes: ${adults} adulto${adults !== 1 ? 's' : ''} · ${kids} niño${kids !== 1 ? 's' : ''}\n¿Podrías confirmarme precio total y forma de reserva? ¡Gracias!`;
+
+      const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank', 'noopener,noreferrer');
+    });
+
+    // ── E) Floating WhatsApp — pre-written generic message ──
+    const floatMsg = `¡Hola! Me encantó Oasis Boutique. Quisiera saber si tienen disponibilidad para las fechas del ____ al ____ para ____ personas. ¡Gracias!`;
+    document.getElementById('waFloat').href = `https://wa.me/${PHONE}?text=${encodeURIComponent(floatMsg)}`;
+
+    // ── Scroll reveal ──
+    const obs = new IntersectionObserver(en => { en.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); obs.unobserve(e.target); } }); }, { threshold: .08, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+  </script>
+
+</body>
+</html>
