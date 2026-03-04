@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Casa Tejado — Casa de diseño con parque de 600m² y piscina privada en Anisacate, Córdoba. Reserva directo por WhatsApp, mejor tarifa garantizada." />
+  <title>Casa Tejado — Tu Refugio Familiar en las Sierras</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: '#fae0cf',
+            'brand-50': 'rgba(250,224,207,0.5)',
+            'brand-30': 'rgba(250,224,207,0.3)',
+            ink: '#2a2c28',
+            sand: '#a19e89',
+            'sand-20': 'rgba(161,158,137,0.2)',
+            wa: '#25D366',
+            'wa-dk': '#1EBE5A',
+          },
+          fontFamily: {
+            display: ['"Playfair Display"', 'Georgia', 'serif'],
+            body: ['Outfit', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:92px}
+    body{font-family:'Outfit',sans-serif;background:#fae0cf;color:#2a2c28;font-size:16px}
+
+    /* Mosaic */
+    .mosaic{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:200px 200px;gap:5px}
+    .mosaic .m0{grid-column:1;grid-row:1/3}
+    @media(min-width:768px){.mosaic{grid-template-columns:1.6fr 1fr 1fr;grid-template-rows:250px 250px;gap:8px}.mosaic .m0{grid-column:1;grid-row:1/3}}
+    @media(min-width:1024px){.mosaic{grid-template-rows:290px 290px;gap:10px}}
+    .mosaic .cell{overflow:hidden;border-radius:16px;position:relative;cursor:pointer}
+    .mosaic .cell img{width:100%;height:100%;object-fit:cover;transition:transform .5s cubic-bezier(.22,1,.36,1)}
+    .mosaic .cell:hover img{transform:scale(1.05)}
+
+    /* Sticky */
+    .sbar{transition:box-shadow .3s,background-color .3s}
+    .sbar.stuck{box-shadow:0 4px 32px rgba(42,44,40,.08);background:rgba(255,255,255,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+
+    /* Reveal */
+    .rv{opacity:0;transform:translateY(24px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
+    .rv.vis{opacity:1;transform:translateY(0)}
+
+    /* Amenity */
+    .amc{transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s}
+    .amc:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(42,44,40,.06)}
+
+    /* Reviews */
+    .rtr{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px}
+    .rtr::-webkit-scrollbar{display:none}
+    .rc{scroll-snap-align:start;flex-shrink:0}
+
+    /* Field */
+    .fld:focus{outline:none;box-shadow:0 0 0 3px rgba(161,158,137,.35);border-color:#a19e89}
+
+    /* Lightbox */
+    .lb{position:fixed;inset:0;z-index:9999;background:rgba(42,44,40,.94);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+    .lb.open{opacity:1;pointer-events:auto}
+    .lb img{max-width:92vw;max-height:82vh;object-fit:contain;border-radius:12px}
+    .lb-b{position:absolute;top:50%;transform:translateY(-50%);width:50px;height:50px;border-radius:50%;border:none;background:rgba(255,255,255,.1);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(6px);transition:background .2s}
+    .lb-b:hover{background:rgba(255,255,255,.22)}
+    .lb-p{left:16px}.lb-n{right:16px}
+    .lb-x{position:absolute;top:16px;right:16px;width:50px;height:50px;border-radius:50%;border:none;background:rgba(255,255,255,.08);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(6px);transition:background .2s}
+    .lb-x:hover{background:rgba(255,255,255,.22)}
+    .lb-c{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.55);font-family:'Outfit',sans-serif;font-size:.85rem;letter-spacing:.04em}
+
+    /* Popover */
+    .popover{opacity:0;transform:translateY(8px) scale(.97);pointer-events:none;transition:opacity .22s,transform .22s}
+    .popover.show{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+
+    /* WA tooltip */
+    .wa-tip{opacity:0;transform:translateX(10px) scale(.95);pointer-events:none;transition:opacity .3s,transform .3s}
+    .wa-wrap:hover .wa-tip{opacity:1;transform:translateX(0) scale(1);pointer-events:auto}
+
+    /* Counter button */
+    .cnt{width:38px;height:38px;border-radius:50%;border:2px solid #a19e8930;display:flex;align-items:center;justify-content:center;font-size:1.15rem;font-weight:600;color:#2a2c28;cursor:pointer;background:#fff;transition:border-color .2s;user-select:none}
+    .cnt:hover{border-color:#a19e89;color:#a19e89}
+    .cnt:disabled{opacity:.25;cursor:not-allowed}
+    .cnt:disabled:hover{border-color:#a19e8930;color:#2a2c28}
+
+    /* Toggle switch */
+    .switch{position:relative;width:52px;height:28px;background:#e0ddd4;border-radius:999px;cursor:pointer;transition:background .25s;flex-shrink:0}
+    .switch::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;background:#fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.12);transition:transform .25s}
+    .switch.on{background:#25D366}
+    .switch.on::after{transform:translateX(24px)}
+
+    /* Toast */
+    .toast{position:fixed;top:104px;left:50%;transform:translateX(-50%) translateY(-14px);z-index:9998;background:#2a2c28;color:#fae0cf;font-family:'Outfit',sans-serif;font-size:.875rem;font-weight:500;padding:12px 26px;border-radius:14px;box-shadow:0 10px 36px rgba(42,44,40,.18);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;white-space:nowrap}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+
+    /* Date alert ring */
+    .d-ring{animation:dring .6s ease}
+    @keyframes dring{0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}50%{box-shadow:0 0 0 4px rgba(37,211,102,.35)}}
+
+    /* Divider accent */
+    .accent-bar{width:48px;height:3px;background:#a19e89;border-radius:999px}
+
+    /* Badge */
+    .badge{display:inline-flex;align-items:center;gap:6px;background:rgba(161,158,137,.15);color:#a19e89;font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;padding:5px 14px;border-radius:999px}
+  </style>
+</head>
+
+<body class="antialiased">
+
+  <!-- TOAST -->
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+  <!-- LIGHTBOX -->
+  <div id="lb" class="lb" role="dialog" aria-modal="true" aria-label="Galería de fotos">
+    <button class="lb-x" id="lbX" aria-label="Cerrar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    <button class="lb-b lb-p" id="lbP" aria-label="Anterior"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg></button>
+    <img id="lbI" src="" alt="" />
+    <button class="lb-b lb-n" id="lbN" aria-label="Siguiente"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>
+    <div class="lb-c" id="lbCt"></div>
+  </div>
+
+  <!-- ═══ S1 — HEADER + ÁLBUM ═══ -->
+  <header class="relative overflow-hidden" aria-labelledby="h1">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 md:pt-8">
+
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-5 md:mb-7 relative z-10">
+        <a href="#" class="font-display font-bold text-[1.5rem] md:text-[1.75rem] tracking-tight text-ink">Casa Tejado</a>
+        <span class="badge">
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          4.9 · Superhost
+        </span>
+      </div>
+
+      <!-- Mosaic -->
+      <div class="mosaic" id="grid">
+        <div class="cell m0" data-i="0"><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=960&q=80" alt="Fachada de Casa Tejado con parque verde y sierras de fondo" loading="eager" fetchpriority="high" /></div>
+        <div class="cell" data-i="1"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=480&q=75" alt="Living amplio con luz natural y sofás de diseño" loading="eager" /></div>
+        <div class="cell hidden md:block" data-i="2"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=480&q=75" alt="Dormitorio principal con vistas al parque" loading="eager" /></div>
+        <div class="cell" data-i="3"><img src="https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=480&q=75" alt="Piscina con deck de madera y reposeras" loading="lazy" /></div>
+        <div class="cell hidden md:block relative" data-i="4">
+          <img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=480&q=75" alt="Quincho con asador y mesa exterior" loading="lazy" />
+          <div class="absolute inset-0 bg-ink/45 flex items-center justify-center text-white font-body font-semibold text-sm pointer-events-none">
+            <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>Ver todas las fotos
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero text -->
+      <div class="relative z-10 max-w-2xl pt-10 pb-6 md:pt-14 md:pb-8">
+        <div class="accent-bar mb-6"></div>
+        <h1 id="h1" class="font-display font-bold text-[1.85rem] sm:text-4xl md:text-5xl lg:text-[3.4rem] leading-[1.08] text-ink mb-5">Tu Refugio Familiar<br class="hidden sm:block" /> en el Valle de Anisacate.</h1>
+        <p class="font-body font-light text-ink/65 text-base sm:text-lg md:text-xl leading-relaxed max-w-xl">Tranquilidad, amplitud y confort absoluto. Una casa de diseño con un enorme parque de 600m² y piscina privada, pensada para conectar con la naturaleza.</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ S2 — BOOKING BAR STICKY ═══ -->
+  <aside id="sbar" class="sbar sticky top-0 z-40 bg-white/80 border-b border-ink/[0.05]" role="search" aria-label="Motor de reservas">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-end gap-3 sm:gap-4">
+        <div class="flex-1 min-w-0">
+          <label for="ci" class="block text-[0.65rem] font-body font-semibold uppercase tracking-widest text-ink/45 mb-1">Llegada</label>
+          <input type="date" id="ci" class="fld w-full bg-white border border-ink/10 rounded-xl px-4 py-2.5 font-body text-sm text-ink transition" />
+        </div>
+        <div class="flex-1 min-w-0">
+          <label for="co" class="block text-[0.65rem] font-body font-semibold uppercase tracking-widest text-ink/45 mb-1">Salida</label>
+          <input type="date" id="co" class="fld w-full bg-white border border-ink/10 rounded-xl px-4 py-2.5 font-body text-sm text-ink transition" />
+        </div>
+
+        <!-- Guests popover -->
+        <div class="flex-1 min-w-0 relative">
+          <label class="block text-[0.65rem] font-body font-semibold uppercase tracking-widest text-ink/45 mb-1">Huéspedes</label>
+          <button type="button" id="gBtn" class="fld w-full bg-white border border-ink/10 rounded-xl px-4 py-2.5 font-body text-sm text-ink text-left transition flex items-center justify-between min-h-[44px]" aria-expanded="false" aria-controls="gPop">
+            <span id="gLabel">2 Adultos · 0 Niños</span>
+            <svg class="w-4 h-4 text-ink/30 flex-shrink-0 ml-2 transition-transform" id="gChev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+
+          <div id="gPop" class="popover absolute left-0 right-0 sm:min-w-[300px] top-full mt-2 bg-white rounded-2xl border border-ink/8 shadow-2xl p-6 z-50">
+            <!-- Adults -->
+            <div class="flex items-center justify-between mb-5">
+              <div><p class="font-body font-semibold text-ink text-sm">Adultos</p><p class="font-body font-light text-ink/45 text-xs">13 años o más</p></div>
+              <div class="flex items-center gap-3">
+                <button type="button" class="cnt" id="adM" aria-label="Menos adultos">−</button>
+                <span class="font-body font-semibold text-ink text-base w-6 text-center" id="adC">2</span>
+                <button type="button" class="cnt" id="adP" aria-label="Más adultos">+</button>
+              </div>
+            </div>
+            <!-- Kids -->
+            <div class="flex items-center justify-between mb-5">
+              <div><p class="font-body font-semibold text-ink text-sm">Niños</p><p class="font-body font-light text-ink/45 text-xs">0 – 12 años</p></div>
+              <div class="flex items-center gap-3">
+                <button type="button" class="cnt" id="kiM" aria-label="Menos niños">−</button>
+                <span class="font-body font-semibold text-ink text-base w-6 text-center" id="kiC">0</span>
+                <button type="button" class="cnt" id="kiP" aria-label="Más niños">+</button>
+              </div>
+            </div>
+            <!-- Pet switch -->
+            <div class="flex items-center justify-between pt-4 border-t border-ink/[0.06]">
+              <div><p class="font-body font-semibold text-ink text-sm">¿Viajás con mascotas?</p><p class="font-body font-light text-ink/45 text-xs">Somos Pet Friendly 🐾</p></div>
+              <div class="switch" id="petSwitch" role="switch" aria-checked="false" aria-label="Viajo con mascotas" tabindex="0"></div>
+            </div>
+            <button type="button" id="gApply" class="mt-6 w-full bg-ink text-brand font-body font-semibold text-sm py-2.5 rounded-xl hover:bg-ink/90 transition-colors min-h-[44px]">Aplicar</button>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <button type="button" id="waCta" class="sm:flex-shrink-0 bg-wa text-white font-body font-bold text-sm px-8 py-3 rounded-xl hover:bg-wa-dk transition-colors shadow-lg shadow-wa/20 focus:outline-none focus:ring-2 focus:ring-wa focus:ring-offset-2 min-h-[48px] flex items-center justify-center gap-2">
+          <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Consultar por WhatsApp
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- ═══ S3 — AMENIDADES ═══ -->
+    <section id="amenidades" class="py-20 md:py-28" aria-labelledby="am-h">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-12 md:mb-16 rv">
+          <div class="accent-bar mb-5"></div>
+          <h2 id="am-h" class="font-display font-bold text-2xl sm:text-3xl md:text-4xl text-ink leading-tight">Pensado para el Confort de Todos.</h2>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
+
+          <!-- 1 -->
+          <div class="amc rv bg-white rounded-2xl p-5 md:p-6 border border-ink/[0.04] text-center">
+            <div class="w-12 h-12 mx-auto mb-3 bg-sand-20 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-sand" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </div>
+            <p class="font-body font-semibold text-ink text-sm">Capacidad 10 personas</p>
+          </div>
+          <!-- 2 -->
+          <div class="amc rv bg-white rounded-2xl p-5 md:p-6 border border-ink/[0.04] text-center" style="transition-delay:.04s">
+            <div class="w-12 h-12 mx-auto mb-3 bg-sand-20 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-sand" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            </div>
+            <p class="font-body font-semibold text-ink text-sm">Depto privado extra</p>
+          </div>
+          <!-- 3 -->
+          <div class="amc rv bg-white rounded-2xl p-5 md:p-6 border border-ink/[0.04] text-center" style="transition-delay:.08s">
+            <div class="w-12 h-12 mx-auto mb-3 bg-sand-20 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-sand" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7v11a2 2 0 002 2h14a2 2 0 002-2V7M3 7l9-4 9 4M12 22V3"/></svg>
+            </div>
+            <p class="font-body font-semibold text-ink text-sm">4 Habitaciones y 2 Baños</p>
+          </div>
+          <!-- 4 -->
+          <div class="amc rv bg-white rounded-2xl p-5 md:p-6 border border-ink/[0.04] text-center" style="transition-delay:.12s">
+            <div class="w-12 h-12 mx-auto mb-3 bg-sand-20 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-sand" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+            </div>
+            <p class="font-body font-semibold text-ink text-sm">Parque de 600m²</p>
+          </div>
+          <!-- 5 -->
+          <div class="amc rv bg-white rounded-2xl p-5 md:p-6 border border-ink/[0.04] text-center" style="transition-delay:.16s">
+            <div class="w-12 h-12 mx-auto mb-3 bg-sand-20 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-sand" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2 15c1.5 1.5 3.5 1.5 5 0s3.5-1.5 5 0 3.5 1.5 5 0 3.5-1.5 5 0M2 19c1.5 1.5 3.5 1.5 5 0s3.5-1.5 5 0 3.5 1.5 5 0 3.5-1.5 5 0M5 11V5a2 2 0 012-2h10a2 2 0 012 2v6"/></svg>
+            </div>
+            <p class="font-body font-semibold text-ink text-sm">Gran Piscina</p>
+          </div>
+          <!-- 6 -->
+          <div class="amc rv bg-white rounded-2xl p-5 md:p-6 border border-ink/[0.04] text-center" style="transition-delay:.2s">
+            <div class="w-12 h-12 mx-auto mb-3 bg-sand-20 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-sand" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"/></svg>
+            </div>
+            <p class="font-body font-semibold text-ink text-sm">Quincho / Asador</p>
+          </div>
+          <!-- 7 -->
+          <div class="amc rv bg-white rounded-2xl p-5 md:p-6 border border-ink/[0.04] text-center" style="transition-delay:.24s">
+            <div class="w-12 h-12 mx-auto mb-3 bg-sand-20 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-sand" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <p class="font-body font-semibold text-ink text-sm">Pet Friendly</p>
+          </div>
+          <!-- 8 -->
+          <div class="amc rv bg-white rounded-2xl p-5 md:p-6 border border-ink/[0.04] text-center" style="transition-delay:.28s">
+            <div class="w-12 h-12 mx-auto mb-3 bg-sand-20 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-sand" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v4M12 14v4M16 14v4"/></svg>
+            </div>
+            <p class="font-body font-semibold text-ink text-sm">Cochera (2 autos)</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ S4 — RESEÑAS ═══ -->
+    <section class="py-20 md:py-28 bg-ink/[0.025]" aria-labelledby="rv-h">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl mb-10 md:mb-14 rv">
+          <div class="accent-bar mb-5"></div>
+          <h2 id="rv-h" class="font-display font-bold text-2xl sm:text-3xl md:text-4xl text-ink leading-tight">Lo que Dicen Quienes Ya Nos Visitaron.</h2>
+        </div>
+        <div class="rtr rv" role="list">
+          <!-- R1 -->
+          <article class="rc w-[310px] sm:w-96 bg-white rounded-2xl p-6 border border-ink/[0.05] shadow-sm" role="listitem">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-full bg-brand flex items-center justify-center font-body font-bold text-ink text-sm">FG</div>
+              <div><p class="font-body font-semibold text-ink text-sm">Familia González</p><p class="font-body text-ink/40 text-xs">hace 2 semanas</p></div>
+              <svg class="ml-auto w-5 h-5 text-ink/12" viewBox="0 0 24 24" fill="currentColor" aria-label="Google"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            </div>
+            <div class="flex gap-0.5 mb-3" aria-label="5 de 5 estrellas"><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+            <p class="font-body font-light text-ink/65 text-sm leading-relaxed">"Fuimos 8 personas y sobraba espacio. El parque es espectacular, los chicos no paraban de jugar. La pileta impecable y el quincho tiene todo. La anfitriona muy atenta. ¡Volvemos seguro!"</p>
+          </article>
+          <!-- R2 -->
+          <article class="rc w-[310px] sm:w-96 bg-white rounded-2xl p-6 border border-ink/[0.05] shadow-sm" role="listitem">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-full bg-sand-20 flex items-center justify-center font-body font-bold text-sand text-sm">LM</div>
+              <div><p class="font-body font-semibold text-ink text-sm">Laura M.</p><p class="font-body text-ink/40 text-xs">hace 1 mes</p></div>
+              <svg class="ml-auto w-5 h-5 text-ink/12" viewBox="0 0 24 24" fill="currentColor" aria-label="Google"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            </div>
+            <div class="flex gap-0.5 mb-3" aria-label="5 de 5 estrellas"><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+            <p class="font-body font-light text-ink/65 text-sm leading-relaxed">"Llevamos a nuestro perro y fue bienvenido. La casa es hermosa, muy cuidada. Amamos desayunar en el parque mirando las sierras. El depto extra fue clave para la privacidad de los abuelos."</p>
+          </article>
+          <!-- R3 -->
+          <article class="rc w-[310px] sm:w-96 bg-white rounded-2xl p-6 border border-ink/[0.05] shadow-sm" role="listitem">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-full bg-wa/15 flex items-center justify-center font-body font-bold text-wa text-sm">DR</div>
+              <div><p class="font-body font-semibold text-ink text-sm">Diego R.</p><p class="font-body text-ink/40 text-xs">hace 3 semanas</p></div>
+              <svg class="ml-auto w-5 h-5 text-ink/12" viewBox="0 0 24 24" fill="currentColor" aria-label="Google"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            </div>
+            <div class="flex gap-0.5 mb-3" aria-label="5 de 5 estrellas"><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+            <p class="font-body font-light text-ink/65 text-sm leading-relaxed">"Increíble relación calidad-precio. Fuimos un grupo de amigos y la pasamos genial. El asador es de primera, la pileta enorme, y la tranquilidad del valle no tiene precio. 100% recomendable."</p>
+          </article>
+        </div>
+        <div class="mt-8 rv"><a href="#" class="inline-flex items-center gap-2 text-sand font-body font-semibold text-sm hover:underline focus:outline-none focus:ring-2 focus:ring-sand rounded min-h-[48px]" target="_blank" rel="noopener noreferrer">Leer las reseñas en Google Maps <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg></a></div>
+      </div>
+    </section>
+
+    <!-- ═══ S5 — UBICACIÓN ═══ -->
+    <section class="py-20 md:py-28" aria-labelledby="ub-h">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl mb-12 md:mb-16 rv">
+          <div class="accent-bar mb-5"></div>
+          <h2 id="ub-h" class="font-display font-bold text-2xl sm:text-3xl md:text-4xl text-ink leading-tight">Conectados con la Naturaleza.</h2>
+        </div>
+        <div class="grid md:grid-cols-5 gap-8 md:gap-12 items-start">
+          <div class="md:col-span-2 space-y-4 rv">
+            <div class="flex items-start gap-4 bg-white/70 rounded-xl p-5 border border-ink/[0.04]"><span class="text-2xl flex-shrink-0" aria-hidden="true">🏔️</span><div><p class="font-body font-semibold text-ink text-sm">Valle de Anisacate</p><p class="font-body font-light text-ink/55 text-sm">A 45 min. de Córdoba Capital por Ruta E55.</p></div></div>
+            <div class="flex items-start gap-4 bg-white/70 rounded-xl p-5 border border-ink/[0.04]"><span class="text-2xl flex-shrink-0" aria-hidden="true">🛒</span><div><p class="font-body font-semibold text-ink text-sm">Proveeduría y comercios</p><p class="font-body font-light text-ink/55 text-sm">A 5 min. en auto del centro comercial.</p></div></div>
+            <div class="flex items-start gap-4 bg-white/70 rounded-xl p-5 border border-ink/[0.04]"><span class="text-2xl flex-shrink-0" aria-hidden="true">🌊</span><div><p class="font-body font-semibold text-ink text-sm">Río y balnearios</p><p class="font-body font-light text-ink/55 text-sm">A 8 min. en auto del Río Anisacate.</p></div></div>
+            <div class="flex items-start gap-4 bg-white/70 rounded-xl p-5 border border-ink/[0.04]"><span class="text-2xl flex-shrink-0" aria-hidden="true">✈️</span><div><p class="font-body font-semibold text-ink text-sm">Aeropuerto</p><p class="font-body font-light text-ink/55 text-sm">A 55 min. del Aeropuerto Taravella.</p></div></div>
+          </div>
+          <div class="md:col-span-3 rv" style="transition-delay:.1s">
+            <div class="bg-white/50 border border-ink/6 rounded-2xl overflow-hidden shadow-sm" style="min-height:380px">
+              <div class="relative w-full" style="padding-bottom:70%">
+                <iframe class="absolute inset-0 w-full h-full" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13600!2d-64.40!3d-31.72!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzHCsDQzJzE!5e0!3m2!1ses!2sar!4v1700000000000" style="border:0" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Ubicación de Casa Tejado"></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-ink text-brand/70 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div><p class="font-display font-bold text-brand text-lg mb-1">Casa Tejado</p><p class="font-body font-light text-brand/40 text-sm">Reserva directo · Mejor tarifa garantizada</p></div>
+      <nav aria-label="Pie de página"><ul class="flex flex-wrap justify-center gap-6 font-body text-sm text-brand/40"><li><a href="#" class="hover:text-brand transition-colors">Políticas</a></li><li><a href="#" class="hover:text-brand transition-colors">Reglas</a></li><li><a href="#" class="hover:text-brand transition-colors">FAQ</a></li></ul></nav>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 border-t border-brand/10 mt-8 pt-6 text-center"><p class="font-body text-xs text-brand/25">© 2025 Casa Tejado. Todos los derechos reservados.</p></div>
+  </footer>
+
+  <!-- ═══ S6 — WHATSAPP FLOTANTE ═══ -->
+  <div class="wa-wrap fixed bottom-6 right-6 z-50 flex items-center gap-3">
+    <div class="wa-tip bg-white rounded-xl px-4 py-2.5 shadow-xl border border-ink/[0.05] max-w-[200px] relative">
+      <p class="font-body font-medium text-ink text-xs leading-snug">¿Dudas? ¡Hablemos!</p>
+      <div class="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-white border-r border-b border-ink/[0.05] rotate-[-45deg]"></div>
+    </div>
+    <a id="waFloat" href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="relative flex items-center justify-center w-14 h-14 bg-wa rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-wa focus:ring-offset-2">
+      <span class="absolute inset-0 rounded-full bg-wa animate-ping opacity-20"></span>
+      <svg class="w-7 h-7 text-white relative z-10" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      <span class="absolute -top-0.5 -right-0.5 w-4 h-4 bg-wa rounded-full border-2 border-brand flex items-center justify-center"><span class="text-white text-[8px] font-body font-bold">1</span></span>
+    </a>
+  </div>
+
+  <!-- ═══ JAVASCRIPT ═══ -->
+  <script>
+    const PHONE = '5491100000000';
+
+    // Helpers
+    function fmtDate(s) { const [y,m,d] = s.split('-'); return `${d}/${m}/${y}`; }
+    function showToast(msg, ms=3000) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),ms); }
+
+    // A) Sticky
+    const sbar = document.getElementById('sbar');
+    addEventListener('scroll', () => sbar.classList.toggle('stuck', scrollY > 100), { passive: true });
+
+    // B) Lightbox
+    const photos = [
+      { src:'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=85', alt:'Fachada con parque' },
+      { src:'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85', alt:'Living amplio' },
+      { src:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85', alt:'Dormitorio principal' },
+      { src:'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=1200&q=85', alt:'Piscina con deck' },
+      { src:'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85', alt:'Quincho con asador' },
+      { src:'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=85', alt:'Segunda habitación' },
+      { src:'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=1200&q=85', alt:'Cocina equipada' },
+      { src:'https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?auto=format&fit=crop&w=1200&q=85', alt:'Vista al parque' },
+    ];
+    let pi=0;
+    const ol=document.getElementById('lb'), lbI=document.getElementById('lbI'), lbCt=document.getElementById('lbCt');
+    function lbSet(i){pi=i;lbI.src=photos[pi].src;lbI.alt=photos[pi].alt;lbCt.textContent=`${pi+1} / ${photos.length}`;}
+    function lbOpen(i){lbSet(i);ol.classList.add('open');document.body.style.overflow='hidden';}
+    function lbClose(){ol.classList.remove('open');document.body.style.overflow='';}
+    document.getElementById('grid').addEventListener('click',e=>{const c=e.target.closest('[data-i]');if(c)lbOpen(+c.dataset.i);});
+    document.getElementById('lbX').addEventListener('click',lbClose);
+    document.getElementById('lbN').addEventListener('click',()=>lbSet((pi+1)%photos.length));
+    document.getElementById('lbP').addEventListener('click',()=>lbSet((pi-1+photos.length)%photos.length));
+    ol.addEventListener('click',e=>{if(e.target===ol)lbClose();});
+    addEventListener('keydown',e=>{if(!ol.classList.contains('open'))return;if(e.key==='Escape')lbClose();if(e.key==='ArrowRight')lbSet((pi+1)%photos.length);if(e.key==='ArrowLeft')lbSet((pi-1+photos.length)%photos.length);});
+
+    // C) Guest popover + pet switch
+    let adults=2,kids=0,pets=false;
+    const gBtn=document.getElementById('gBtn'),gPop=document.getElementById('gPop'),gLabel=document.getElementById('gLabel'),gChev=document.getElementById('gChev');
+    const adC=document.getElementById('adC'),kiC=document.getElementById('kiC');
+    const adM=document.getElementById('adM'),adP=document.getElementById('adP'),kiM=document.getElementById('kiM'),kiP=document.getElementById('kiP');
+    const petSw=document.getElementById('petSwitch');
+
+    function updL(){gLabel.textContent=`${adults} Adulto${adults!==1?'s':''} · ${kids} Niño${kids!==1?'s':''}${pets?' · 🐾':''}`;}
+    function updB(){adM.disabled=adults<=1;adP.disabled=adults>=10;kiM.disabled=kids<=0;kiP.disabled=kids>=8;adC.textContent=adults;kiC.textContent=kids;}
+    function togPop(f){const o=typeof f==='boolean'?f:!gPop.classList.contains('show');gPop.classList.toggle('show',o);gBtn.setAttribute('aria-expanded',o);gChev.style.transform=o?'rotate(180deg)':'';}
+
+    gBtn.addEventListener('click',e=>{e.stopPropagation();togPop();});
+    adP.addEventListener('click',e=>{e.stopPropagation();if(adults<10){adults++;updB();}});
+    adM.addEventListener('click',e=>{e.stopPropagation();if(adults>1){adults--;updB();}});
+    kiP.addEventListener('click',e=>{e.stopPropagation();if(kids<8){kids++;updB();}});
+    kiM.addEventListener('click',e=>{e.stopPropagation();if(kids>0){kids--;updB();}});
+
+    petSw.addEventListener('click',e=>{e.stopPropagation();pets=!pets;petSw.classList.toggle('on',pets);petSw.setAttribute('aria-checked',pets);});
+    petSw.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();petSw.click();}});
+
+    document.getElementById('gApply').addEventListener('click',e=>{e.stopPropagation();updL();togPop(false);});
+    addEventListener('click',e=>{if(!gBtn.contains(e.target)&&!gPop.contains(e.target))togPop(false);});
+    updB();
+
+    // D) WhatsApp CTA
+    const ciIn=document.getElementById('ci'),coIn=document.getElementById('co');
+    document.getElementById('waCta').addEventListener('click',()=>{
+      const cv=ciIn.value,ov=coIn.value;
+      if(!cv||!ov){showToast('📅 Seleccioná las fechas de llegada y salida.');const t=!cv?ciIn:coIn;t.focus();t.classList.add('d-ring');setTimeout(()=>t.classList.remove('d-ring'),700);return;}
+      const d1=new Date(cv),d2=new Date(ov);
+      if(d2<=d1){showToast('⚠️ La salida debe ser posterior a la llegada.');coIn.focus();coIn.classList.add('d-ring');setTimeout(()=>coIn.classList.remove('d-ring'),700);return;}
+      const n=Math.round((d2-d1)/(864e5));
+      const msg=`Hola, ¿cómo estás? Me gustaría consultar disponibilidad y tarifa para Casa Tejado.\n🗓️ Fechas: ${fmtDate(cv)} → ${fmtDate(ov)} (${n} noche${n!==1?'s':''})\n👥 Huéspedes: ${adults} adulto${adults!==1?'s':''} · ${kids} niño${kids!==1?'s':''}\n🐾 Mascotas: ${pets?'Sí':'No'}\n¿Podrías confirmarme precio total y forma de reserva? ¡Gracias!`;
+      window.open(`https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`,'_blank','noopener,noreferrer');
+    });
+
+    // E) Floating WA
+    const fMsg='¡Hola! Me interesa Casa Tejado. ¿Tienen disponibilidad para las fechas del ____ al ____ para ____ personas? ¡Gracias!';
+    document.getElementById('waFloat').href=`https://wa.me/${PHONE}?text=${encodeURIComponent(fMsg)}`;
+
+    // Reveal
+    const obs=new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -30px 0px'});
+    document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+  </script>
+
+</body>
+</html>
