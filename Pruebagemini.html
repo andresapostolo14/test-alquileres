@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +21,7 @@
             primario: '#491D8B',
             secundario: '#009D9A',
             whatsapp: '#25D366',
-            footer: '#240A4A' /* Un ciruela extra oscuro acorde a la paleta */
+            footer: '#240A4A'
           },
           fontFamily: {
             outfit: ['Outfit', 'sans-serif']
@@ -47,12 +47,18 @@
 </head>
 <body class="bg-fondo text-primario font-outfit relative">
 
-  <header class="max-w-7xl mx-auto px-4 md:px-8 pt-6 pb-3 z-30 relative">
+  <header class="max-w-7xl mx-auto px-4 md:px-8 py-5 z-30 relative flex justify-between items-center">
     <h1 class="text-xl md:text-2xl font-bold tracking-tight text-primario">Oasis Boutique</h1>
+    <nav class="hidden md:flex gap-8 text-sm font-semibold text-primario/80">
+      <a href="#espacio" class="hover:text-secundario transition-colors">El Espacio</a>
+      <a href="#comodidades" class="hover:text-secundario transition-colors">Comodidades</a>
+      <a href="#resenas" class="hover:text-secundario transition-colors">Reseñas</a>
+      <a href="#ubicacion" class="hover:text-secundario transition-colors">Ubicación</a>
+    </nav>
   </header>
 
   <main>
-    <section class="max-w-7xl mx-auto px-4 md:px-8 pb-8">
+    <section id="espacio" class="max-w-7xl mx-auto px-4 md:px-8 pb-8 scroll-mt-8">
       <div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-3 h-[300px] md:h-[500px] rounded-2xl overflow-hidden shadow-lg cursor-pointer" id="gallery-grid">
         <div class="col-span-1 md:col-span-2 md:row-span-2 relative group overflow-hidden" onclick="openLightbox(0)">
           <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Sala principal" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
@@ -73,10 +79,8 @@
           </div>
         </div>
       </div>
-    </section>
-
-    <section class="max-w-7xl mx-auto px-4 md:px-8 pb-8 hidden md:block">
-      <div class="max-w-3xl">
+      
+      <div class="max-w-3xl mt-8 hidden md:block">
         <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">Un Oasis Boutique Diseñado para tu Descanso.</h2>
         <p class="text-lg md:text-xl font-light opacity-90 text-primario/80">Más que un lugar para dormir, una experiencia creada para desconectar. Sumérgete en espacios de diseño vanguardista, luz natural y confort de primer nivel.</p>
       </div>
@@ -134,7 +138,7 @@
       </div>
     </section>
 
-    <section class="max-w-7xl mx-auto px-4 md:px-8 py-16">
+    <section id="comodidades" class="max-w-7xl mx-auto px-4 md:px-8 py-16 scroll-mt-28">
       <h3 class="text-3xl font-bold mb-8">Detalles Pensados para Ti.</h3>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
         <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-primario/5"><i class="fa-wifi fa-solid text-secundario text-xl w-6"></i><span class="font-medium">Wi-Fi Alta Velocidad</span></div>
@@ -148,7 +152,7 @@
       </div>
     </section>
 
-    <section class="py-16">
+    <section id="resenas" class="py-16 scroll-mt-28">
       <div class="max-w-7xl mx-auto px-4 md:px-8">
         <h3 class="text-3xl font-bold mb-10 text-primario">La Experiencia, Contada por Nuestros Huéspedes.</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -178,7 +182,7 @@
       </div>
     </section>
 
-    <section class="max-w-7xl mx-auto px-4 md:px-8 pb-20 pt-8">
+    <section id="ubicacion" class="max-w-7xl mx-auto px-4 md:px-8 pb-20 pt-8 scroll-mt-28">
       <h3 class="text-3xl font-bold mb-8">En el Centro de Todo, Lejos del Ruido.</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div>
@@ -214,7 +218,7 @@
         </ul>
       </div>
       <div class="mt-12 pt-8 border-t border-white/10 flex flex-col items-center justify-center text-sm text-white/40">
-        <p>&copy; 2026 Oasis Boutique. Todos los derechos reservados.</p>
+        <p>© 2026 Oasis Boutique. Todos los derechos reservados.</p>
       </div>
     </div>
   </footer>
@@ -240,7 +244,7 @@
   <script>
     const WHATSAPP_NUMBER = '5491100000000'; 
 
-    let adults = 2; // Iniciando en 2 como en tu captura
+    let adults = 2;
     let children = 0;
 
     const guestsBtn = document.getElementById('guests-btn');
@@ -249,7 +253,6 @@
     const adultsCountEl = document.getElementById('adults-count');
     const childrenCountEl = document.getElementById('children-count');
 
-    // Inicializar UI de huéspedes
     updateGuests('init', 0);
 
     guestsBtn.addEventListener('click', (e) => {
