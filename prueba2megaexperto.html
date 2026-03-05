@@ -1,0 +1,442 @@
+```html
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <!-- -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oasis Boutique | Alquiler Vacacional</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        lavender: '#F6F2FF',
+                        plum: '#491D8B',
+                        teal: '#009D9A',
+                        whatsapp: '#25D366'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-lavender text-plum font-sans antialiased selection:bg-teal selection:text-white relative">
+
+    <!-- Sección 1: Header -->
+    <header class="w-full py-6 px-8 flex justify-center md:justify-start items-center bg-lavender/90 backdrop-blur-md border-b border-teal/10">
+        <div class="text-2xl md:text-3xl font-bold tracking-widest uppercase text-plum">
+            Oasis Boutique
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-8">
+        
+        <!-- Sección 1: Textos del Hero -->
+        <section aria-labelledby="hero-heading" class="mb-10">
+            <h1 id="hero-heading" class="text-4xl md:text-6xl font-bold tracking-tight mb-4">Un Oasis Boutique Diseñado para tu Descanso.</h1>
+            <p class="text-plum/80 text-lg md:text-xl max-w-3xl font-light leading-relaxed">
+                Más que un lugar para dormir, una experiencia creada para desconectar. Sumérgete en espacios de diseño vanguardista, luz natural y confort de primer nivel.
+            </p>
+        </section>
+
+        <!-- Sección 1: UI Inicial / Mosaico Asimétrico -->
+        <section class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-3 h-[60vh] md:h-[70vh] mb-16">
+            <div class="md:col-span-2 md:row-span-2 relative group overflow-hidden rounded-2xl cursor-pointer" onclick="lightboxModule.open(0)">
+                <img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Vista frontal de Oasis Boutique" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                <div class="absolute inset-0 bg-plum/10 group-hover:bg-transparent transition-colors duration-300"></div>
+            </div>
+            <div class="hidden md:block relative group overflow-hidden rounded-2xl cursor-pointer" onclick="lightboxModule.open(1)">
+                <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Sala de estar" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+            </div>
+            <div class="hidden md:block relative group overflow-hidden rounded-2xl cursor-pointer" onclick="lightboxModule.open(2)">
+                <img src="https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Habitación principal" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+            </div>
+            <div class="hidden md:block md:col-span-2 relative group overflow-hidden rounded-2xl cursor-pointer" onclick="lightboxModule.open(3)">
+                <img src="https://images.unsplash.com/photo-1574362848149-11496d93a7c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Área de piscina" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
+                    <button class="bg-white/95 text-plum px-6 py-3 rounded-xl font-bold text-sm shadow-xl transition-transform transform group-hover:-translate-y-1 pointer-events-none">
+                        Ver todas las fotos
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 2: Motor de Reservas "Sticky" -->
+        <section class="sticky top-4 z-30 bg-white p-4 md:p-6 rounded-3xl shadow-[0_20px_50px_-12px_rgba(73,29,139,0.15)] border border-teal/20 mb-16 mx-auto w-full max-w-5xl">
+            <div id="booking-alert" class="hidden text-sm font-bold text-white mb-4 bg-teal p-3 rounded-lg text-center shadow-md transition-opacity duration-300">
+                Por favor, selecciona tus fechas de llegada y salida para continuar.
+            </div>
+            
+            <div class="flex flex-col md:flex-row gap-4 items-center">
+                <!-- Fechas -->
+                <div class="flex-1 w-full grid grid-cols-2 gap-2 border border-teal/30 rounded-xl bg-lavender/30 p-2 focus-within:ring-2 focus-within:ring-teal/50 transition-all">
+                    <div class="relative px-3 border-r border-teal/30">
+                        <label for="llegada" class="block text-xs font-bold uppercase tracking-wider text-teal">Llegada</label>
+                        <input type="date" id="llegada" class="w-full bg-transparent outline-none text-plum font-semibold mt-1 cursor-pointer" onchange="reservaModule.clearAlert()">
+                    </div>
+                    <div class="relative px-3">
+                        <label for="salida" class="block text-xs font-bold uppercase tracking-wider text-teal">Salida</label>
+                        <input type="date" id="salida" class="w-full bg-transparent outline-none text-plum font-semibold mt-1 cursor-pointer" onchange="reservaModule.clearAlert()">
+                    </div>
+                </div>
+
+                <!-- Huéspedes Popover -->
+                <div class="relative flex-1 w-full border border-teal/30 rounded-xl bg-lavender/30 p-2 cursor-pointer hover:bg-lavender/50 transition-colors" onclick="reservaModule.togglePopover(event)">
+                    <div class="px-3">
+                        <span class="block text-xs font-bold uppercase tracking-wider text-teal pointer-events-none">Huéspedes</span>
+                        <div class="text-plum font-semibold mt-1 pointer-events-none" id="huespedes-resumen">2 adultos · 0 niños</div>
+                    </div>
+                    
+                    <div id="huespedes-popover" class="hidden absolute top-[calc(100%+0.5rem)] left-0 right-0 bg-white border border-teal/20 shadow-2xl rounded-xl p-5 z-50 cursor-default" onclick="event.stopPropagation()">
+                        <div class="flex justify-between items-center mb-5">
+                            <div>
+                                <div class="font-bold text-plum text-lg">Adultos</div>
+                                <div class="text-xs text-plum/60 font-medium">Trece años o más</div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <button type="button" onclick="reservaModule.updateGuests('adultos', -1)" class="w-9 h-9 rounded-full border-2 border-teal/30 flex items-center justify-center text-teal hover:border-teal hover:bg-teal/10 font-bold transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed" id="btn-adultos-minus">-</button>
+                                <span id="count-adultos" class="w-4 text-center font-bold text-lg">2</span>
+                                <button type="button" onclick="reservaModule.updateGuests('adultos', 1)" class="w-9 h-9 rounded-full border-2 border-teal/30 flex items-center justify-center text-teal hover:border-teal hover:bg-teal/10 font-bold transition-all">+</button>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <div class="font-bold text-plum text-lg">Niños</div>
+                                <div class="text-xs text-plum/60 font-medium">De 2 a 12 años</div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <button type="button" onclick="reservaModule.updateGuests('ninos', -1)" class="w-9 h-9 rounded-full border-2 border-teal/30 flex items-center justify-center text-teal hover:border-teal hover:bg-teal/10 font-bold transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed" id="btn-ninos-minus" disabled>-</button>
+                                <span id="count-ninos" class="w-4 text-center font-bold text-lg">0</span>
+                                <button type="button" onclick="reservaModule.updateGuests('ninos', 1)" class="w-9 h-9 rounded-full border-2 border-teal/30 flex items-center justify-center text-teal hover:border-teal hover:bg-teal/10 font-bold transition-all">+</button>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-teal/10 text-right">
+                            <button type="button" onclick="reservaModule.closePopover()" class="text-sm font-bold bg-teal text-white px-4 py-2 rounded-lg hover:bg-[#007b79] transition-colors">Aceptar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botón Principal WhatsApp -->
+                <div class="flex-none w-full md:w-auto">
+                    <button onclick="reservaModule.handleConsultation()" class="w-full md:w-auto bg-whatsapp hover:bg-[#20b858] text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:-translate-y-1 shadow-[0_8px_20px_-6px_rgba(37,211,102,0.6)] flex justify-center items-center gap-2 whitespace-nowrap">
+                        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-5.824 4.74-10.563 10.564-10.563 5.826 0 10.564 4.738 10.564 10.561s-4.738 10.565-10.564 10.565z"/></svg>
+                        Consultar por WhatsApp
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 3: Amenidades Exactas -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold mb-10 text-center md:text-left border-b border-teal/20 pb-4">Detalles Pensados para Ti.</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-6 text-plum font-medium text-lg">
+                <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-lavender"><svg class="w-7 h-7 text-teal flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.906 14.142 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path></svg> 1. Wi-Fi</div>
+                <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-lavender"><svg class="w-7 h-7 text-teal flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg> 2. 1 Baño</div>
+                <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-lavender"><svg class="w-7 h-7 text-teal flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg> 3. 2 Habitaciones</div>
+                <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-lavender"><svg class="w-7 h-7 text-teal flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg> 4. Cocina</div>
+                <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-lavender"><svg class="w-7 h-7 text-teal flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg> 5. TV Smart</div>
+                <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-lavender"><svg class="w-7 h-7 text-teal flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg> 6. Ventiladores</div>
+                <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-lavender"><svg class="w-7 h-7 text-teal flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> 7. Pileta</div>
+                <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-lavender"><svg class="w-7 h-7 text-teal flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg> 8. Cochera (1 auto)</div>
+            </div>
+        </section>
+
+        <!-- Sección 4: Prueba Social / Reseñas -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold mb-10 text-center md:text-left border-b border-teal/20 pb-4">La Experiencia, Contada por Nuestros Huéspedes.</h2>
+            <div class="flex overflow-x-auto gap-6 pb-8 no-scrollbar snap-x snap-mandatory">
+                
+                <article class="bg-white p-6 rounded-2xl shadow-md min-w-[300px] md:min-w-[350px] snap-center border border-lavender flex-shrink-0">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-teal/20 rounded-full flex items-center justify-center text-teal font-bold text-xl">M</div>
+                        <div>
+                            <div class="font-bold text-plum">Martina L.</div>
+                            <div class="flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                    </div>
+                    <p class="text-plum/80 font-light italic">"Increíble lugar. La arquitectura es soñada y cada detalle de la casa está pensado para el descanso. La pileta es hermosa y la atención inmejorable. Volveremos sin dudas."</p>
+                </article>
+
+                <article class="bg-white p-6 rounded-2xl shadow-md min-w-[300px] md:min-w-[350px] snap-center border border-lavender flex-shrink-0">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-plum/20 rounded-full flex items-center justify-center text-plum font-bold text-xl">D</div>
+                        <div>
+                            <div class="font-bold text-plum">Diego R.</div>
+                            <div class="flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                    </div>
+                    <p class="text-plum/80 font-light italic">"Exactamente como en las fotos, o mejor. Mucha luz natural, espacios amplios y súper limpio. El wifi funcionó perfecto para trabajar unos días. Un verdadero oasis."</p>
+                </article>
+
+                <article class="bg-white p-6 rounded-2xl shadow-md min-w-[300px] md:min-w-[350px] snap-center border border-lavender flex-shrink-0">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-teal/20 rounded-full flex items-center justify-center text-teal font-bold text-xl">C</div>
+                        <div>
+                            <div class="font-bold text-plum">Carolina G.</div>
+                            <div class="flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                    </div>
+                    <p class="text-plum/80 font-light italic">"La tranquilidad que hay en este lugar no tiene precio. Está lo suficientemente aislado para desconectar pero cerca de todo lo necesario. La cocina está súper equipada."</p>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- Sección 5: Mapa Interactivo y Entorno -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-10 text-center md:text-left border-b border-teal/20 pb-4">En el Centro de Todo, Lejos del Ruido.</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-lavender">
+                <div class="lg:col-span-1 space-y-6">
+                    <h3 class="font-bold text-xl text-plum mb-4">Distancias de interés</h3>
+                    <ul class="space-y-4 text-plum/80 font-medium">
+                        <li class="flex justify-between items-center border-b border-teal/10 pb-2">
+                            <span class="flex items-center gap-2"><svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg> Centro Comercial</span>
+                            <span class="text-teal font-bold">5 min</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-teal/10 pb-2">
+                            <span class="flex items-center gap-2"><svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"></path></svg> Zona Gastronómica</span>
+                            <span class="text-teal font-bold">8 min</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-teal/10 pb-2">
+                            <span class="flex items-center gap-2"><svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Reserva Natural</span>
+                            <span class="text-teal font-bold">12 min</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="lg:col-span-2 h-[300px] md:h-[400px] w-full rounded-2xl overflow-hidden border-2 border-lavender shadow-inner bg-gray-100 relative">
+                    <!-- Iframe de Google Maps simulado -->
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13619.601552599663!2d-64.2185521!3d-31.4165633!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzHCsDI1JzAwLjAiUyA2NMKwMTMnMDYuOCJX!5e0!3m2!1ses-419!2sar!4v1620000000000!5m2!1ses-419!2sar" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        title="Mapa de ubicación">
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Sección 6: Botón Flotante de WhatsApp -->
+    <div class="fixed bottom-6 right-6 z-40 group flex flex-col items-end">
+        <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white text-plum text-sm font-bold px-4 py-2 rounded-xl shadow-lg border border-teal/10 mb-2 whitespace-nowrap pointer-events-none">
+            ¿Dudas sobre tus fechas? ¡Hablemos!
+        </div>
+        <a href="javascript:void(0)" onclick="reservaModule.handleFloatingWA()" class="bg-whatsapp hover:bg-[#20b858] text-white p-4 rounded-full shadow-2xl transition-transform transform hover:scale-110 flex items-center justify-center">
+            <span class="sr-only">Contactar por WhatsApp</span>
+            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-5.824 4.74-10.563 10.564-10.563 5.826 0 10.564 4.738 10.564 10.561s-4.738 10.565-10.564 10.565z"/></svg>
+        </a>
+    </div>
+
+    <!-- Lightbox (Galería inmersiva) -->
+    <div id="lightbox" class="fixed inset-0 z- bg-plum/98 backdrop-blur-xl hidden flex-col justify-center items-center opacity-0 transition-opacity duration-300" aria-modal="true" role="dialog">
+        <button onclick="lightboxModule.close()" class="absolute top-6 right-6 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-3 transition-colors z-10" aria-label="Cerrar galería">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        
+        <button onclick="lightboxModule.prev(event)" class="absolute left-4 md:left-10 top-1/2 -translate-y-1/2 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-3 transition-colors z-10" aria-label="Foto anterior">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+
+        <img id="lightbox-img" src="" alt="Vista ampliada" class="max-w-[90vw] max-h-[85vh] object-contain rounded-lg shadow-2xl transition-opacity duration-300">
+
+        <button onclick="lightboxModule.next(event)" class="absolute right-4 md:right-10 top-1/2 -translate-y-1/2 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-3 transition-colors z-10" aria-label="Siguiente foto">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+        
+        <div class="absolute bottom-6 left-0 right-0 text-center text-white/70 font-medium tracking-widest text-sm" id="lightbox-counter">
+            1 / 8
+        </div>
+    </div>
+
+    <!-- Lógica JS (Closures, IIFE, Vanilla JS puro) -->
+    <script>
+        const telefonoWhatsApp = "1234567890"; // Reemplazar con el número real
+
+        // Módulo de Galería Lightbox (Mínimo 8 fotos solicitadas)
+        const lightboxModule = (() => {
+            const fotos = [
+                "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1502672260266-1c1c24240f57?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+            ];
+            
+            let currentIndex = 0;
+            const el = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            const counter = document.getElementById('lightbox-counter');
+
+            const updateImage = () => {
+                img.style.opacity = '0';
+                setTimeout(() => {
+                    img.src = fotos[currentIndex];
+                    counter.innerText = `${currentIndex + 1} / ${fotos.length}`;
+                    img.style.opacity = '1';
+                }, 150);
+            };
+
+            const open = (index) => {
+                currentIndex = index;
+                updateImage();
+                el.classList.remove('hidden');
+                setTimeout(() => el.classList.remove('opacity-0'), 10);
+                document.body.style.overflow = 'hidden';
+            };
+
+            const close = () => {
+                el.classList.add('opacity-0');
+                setTimeout(() => {
+                    el.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }, 300);
+            };
+
+            const next = (e) => {
+                e.stopPropagation();
+                currentIndex = (currentIndex + 1) % fotos.length;
+                updateImage();
+            };
+
+            const prev = (e) => {
+                e.stopPropagation();
+                currentIndex = (currentIndex - 1 + fotos.length) % fotos.length;
+                updateImage();
+            };
+
+            el.addEventListener('click', (e) => { if (e.target === el) close(); });
+
+            // Navegación con teclado
+            document.addEventListener('keydown', (e) => {
+                if(el.classList.contains('hidden')) return;
+                if(e.key === 'Escape') close();
+                if(e.key === 'ArrowRight') next(e);
+                if(e.key === 'ArrowLeft') prev(e);
+            });
+
+            return { open, close, next, prev };
+        })();
+
+        // Módulo del Motor de Reservas y WhatsApp
+        const reservaModule = (() => {
+            const state = { adultos: 2, ninos: 0 };
+            
+            const popover = document.getElementById('huespedes-popover');
+            const checkinEl = document.getElementById('llegada');
+            const checkoutEl = document.getElementById('salida');
+            const alertBox = document.getElementById('booking-alert');
+
+            const togglePopover = (e) => popover.classList.toggle('hidden');
+            const closePopover = () => popover.classList.add('hidden');
+
+            document.addEventListener('click', (e) => {
+                const trigger = popover.parentElement;
+                if (!trigger.contains(e.target)) closePopover();
+            });
+
+            const updateGuests = (type, delta) => {
+                const newValue = state[type] + delta;
+                
+                // Límites lógicos
+                if (type === 'adultos' && (newValue < 1 || newValue > 10)) return;
+                if (type === 'ninos' && (newValue < 0 || newValue > 10)) return;
+                
+                state[type] = newValue;
+                
+                // Actualizar contadores
+                document.getElementById(`count-${type}`).innerText = state[type];
+                
+                // Estados visuales de los botones
+                document.getElementById('btn-adultos-minus').disabled = state.adultos <= 1;
+                document.getElementById('btn-ninos-minus').disabled = state.ninos <= 0;
+
+                // Actualizar el resumen
+                const textAdultos = `${state.adultos} adulto${state.adultos > 1 ? 's' : ''}`;
+                const textNinos = `${state.ninos} niño${state.ninos !== 1 ? 's' : ''}`;
+                document.getElementById('huespedes-resumen').innerText = `${textAdultos} · ${textNinos}`;
+            };
+
+            const clearAlert = () => {
+                alertBox.classList.add('hidden');
+                alertBox.classList.remove('opacity-100');
+                checkinEl.parentElement.classList.remove('bg-red-50', 'border-red-300');
+                checkoutEl.parentElement.classList.remove('bg-red-50', 'border-red-300');
+            };
+
+            const triggerAlert = (inputToFocus) => {
+                alertBox.classList.remove('hidden');
+                // Forzar repintado para animar opacidad
+                void alertBox.offsetWidth; 
+                alertBox.classList.add('opacity-100');
+                inputToFocus.parentElement.classList.add('bg-red-50', 'border-red-300');
+                inputToFocus.focus();
+                
+                // Auto-esconder alerta después de 4 seg
+                setTimeout(clearAlert, 4000);
+            };
+
+            const handleConsultation = () => {
+                const llegada = checkinEl.value;
+                const salida = checkoutEl.value;
+
+                // 1. Validaciones
+                if (!llegada) return triggerAlert(checkinEl);
+                if (!salida) return triggerAlert(checkoutEl);
+
+                // 2. Cálculo matemático de noches
+                const inDate = new Date(llegada);
+                const outDate = new Date(salida);
+                
+                if (outDate <= inDate) {
+                    alertBox.innerText = "La fecha de salida debe ser posterior a la de llegada.";
+                    return triggerAlert(checkoutEl);
+                }
+
+                // (salida - llegada) / milisegundos en un día
+                const diffTime = Math.abs(outDate - inDate);
+                const noches = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                // 3. Formateo de fechas para lectura humana (opcional)
+                const formatoLlegada = inDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+                const formatoSalida = outDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+
+                // 4. Construcción dinámica del mensaje de WhatsApp (Template exacto)
+                const mensajeBruto = `Hola, ¿cómo estás? Me gustaría consultar disponibilidad y tarifa para Oasis Boutique.\n\n🗓️ Fechas: ${formatoLlegada} → ${formatoSalida} (${noches} noches)\n\n👥 Huéspedes: ${state.adultos} adultos · ${state.ninos} niños\n\n¿Podrías confirmarme precio total y forma de reserva? ¡Gracias!`;
+                
+                const mensajeCodificado = encodeURIComponent(mensajeBruto);
+                window.open(`https://wa.me/${telefonoWhatsApp}?text=${mensajeCodificado}`, '_blank');
+            };
+
+            const handleFloatingWA = () => {
+                const mensajeBruto = "¡Hola! Me encantó Oasis Boutique. Quisiera saber si tienen disponibilidad para las fechas del ____ al ____ para ____ personas. ¡Gracias!";
+                const mensajeCodificado = encodeURIComponent(mensajeBruto);
+                window.open(`https://wa.me/${telefonoWhatsApp}?text=${mensajeCodificado}`, '_blank');
+            };
+
+            return { togglePopover, closePopover, updateGuests, clearAlert, handleConsultation, handleFloatingWA };
+        })();
+    </script>
+</body>
+</html>
+```
