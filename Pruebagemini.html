@@ -18,6 +18,7 @@
         extend: {
           colors: {
             fondo: '#F6F2FF',
+            encabezado: '#ECE6F5', /* Un tono apenas más oscuro para diferenciar la barra superior */
             primario: '#491D8B',
             secundario: '#009D9A',
             whatsapp: '#25D366',
@@ -47,18 +48,20 @@
 </head>
 <body class="bg-fondo text-primario font-outfit relative">
 
-  <header class="max-w-7xl mx-auto px-4 md:px-8 py-5 z-30 relative flex justify-between items-center">
-    <h1 class="text-xl md:text-2xl font-bold tracking-tight text-primario">Oasis Boutique</h1>
-    <nav class="hidden md:flex gap-8 text-sm font-semibold text-primario/80">
-      <a href="#espacio" class="hover:text-secundario transition-colors">El Espacio</a>
-      <a href="#comodidades" class="hover:text-secundario transition-colors">Comodidades</a>
-      <a href="#resenas" class="hover:text-secundario transition-colors">Reseñas</a>
-      <a href="#ubicacion" class="hover:text-secundario transition-colors">Ubicación</a>
-    </nav>
+  <header class="w-full bg-encabezado z-30 relative">
+    <div class="max-w-7xl mx-auto px-4 md:px-8 py-4 md:py-5 flex justify-between items-center">
+      <h1 class="text-xl md:text-2xl font-bold tracking-tight text-primario">Oasis Boutique</h1>
+      <nav class="hidden md:flex gap-8 text-sm font-semibold text-primario/80">
+        <a href="#espacio" class="hover:text-secundario transition-colors">El Espacio</a>
+        <a href="#comodidades" class="hover:text-secundario transition-colors">Comodidades</a>
+        <a href="#resenas" class="hover:text-secundario transition-colors">Reseñas</a>
+        <a href="#ubicacion" class="hover:text-secundario transition-colors">Ubicación</a>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <section id="espacio" class="max-w-7xl mx-auto px-4 md:px-8 pb-8 scroll-mt-8">
+    <section id="espacio" class="max-w-7xl mx-auto px-4 md:px-8 pt-8 md:pt-12 pb-8 scroll-mt-8">
       <div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-3 h-[300px] md:h-[500px] rounded-2xl overflow-hidden shadow-lg cursor-pointer" id="gallery-grid">
         <div class="col-span-1 md:col-span-2 md:row-span-2 relative group overflow-hidden" onclick="openLightbox(0)">
           <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Sala principal" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
@@ -244,7 +247,7 @@
   <script>
     const WHATSAPP_NUMBER = '5491100000000'; 
 
-    let adults = 2;
+    let adults = 2; 
     let children = 0;
 
     const guestsBtn = document.getElementById('guests-btn');
@@ -253,6 +256,7 @@
     const adultsCountEl = document.getElementById('adults-count');
     const childrenCountEl = document.getElementById('children-count');
 
+    // Inicializar UI de huéspedes
     updateGuests('init', 0);
 
     guestsBtn.addEventListener('click', (e) => {
