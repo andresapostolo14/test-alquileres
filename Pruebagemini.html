@@ -42,8 +42,8 @@
 
   <main>
     <section class="max-w-7xl mx-auto px-4 md:px-8 pt-2 md:pt-4 pb-12">
-      <div class="mb-6 md:mb-8">
-        <h2 class="hidden md:block text-4xl md:text-6xl font-bold mb-4 leading-tight">Un Oasis Boutique Diseñado para tu Descanso.</h2>
+      <div class="hidden md:block mb-6 md:mb-8">
+        <h2 class="text-4xl md:text-6xl font-bold mb-4 leading-tight">Un Oasis Boutique Diseñado para tu Descanso.</h2>
         <p class="text-lg md:text-xl font-light max-w-3xl opacity-90">Más que un lugar para dormir, una experiencia creada para desconectar. Sumérgete en espacios de diseño vanguardista, luz natural y confort de primer nivel.</p>
       </div>
 
@@ -63,7 +63,7 @@
         <div class="hidden md:block col-span-1 row-span-1 relative group overflow-hidden" onclick="openLightbox(4)">
           <img src="https://images.unsplash.com/photo-1574362848149-11496d93a7c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Exterior" class="w-full h-full object-cover">
           <div class="absolute inset-0 bg-primario/60 flex items-center justify-center transition-colors duration-300 group-hover:bg-primario/80">
-            <span class="text-white font-semibold text-lg flex items-center gap-2"><i class="fa-solid fa-images"></i> Ver todas las fotos</span>
+            <span class="text-white font-semibold text-lg flex items-center gap-2"><i class="fa-images fa-solid"></i> Ver todas las fotos</span>
           </div>
         </div>
       </div>
@@ -102,9 +102,9 @@
                 <p class="text-xs text-primario/60">Edad 13 o más</p>
               </div>
               <div class="flex items-center gap-3">
-                <button class="w-8 h-8 rounded-full border border-secundario text-secundario flex items-center justify-center hover:bg-secundario hover:text-white transition" onclick="updateGuests('adults', -1)"><i class="fa-solid fa-minus text-xs"></i></button>
+                <button class="w-8 h-8 rounded-full border border-secundario text-secundario flex items-center justify-center hover:bg-secundario hover:text-white transition" onclick="updateGuests('adults', -1)"><i class="fa-minus fa-solid text-xs"></i></button>
                 <span id="adults-count" class="font-medium w-4 text-center">1</span>
-                <button class="w-8 h-8 rounded-full border border-secundario text-secundario flex items-center justify-center hover:bg-secundario hover:text-white transition" onclick="updateGuests('adults', 1)"><i class="fa-solid fa-plus text-xs"></i></button>
+                <button class="w-8 h-8 rounded-full border border-secundario text-secundario flex items-center justify-center hover:bg-secundario hover:text-white transition" onclick="updateGuests('adults', 1)"><i class="fa-plus fa-solid text-xs"></i></button>
               </div>
             </div>
             <div class="flex justify-between items-center">
@@ -113,16 +113,16 @@
                 <p class="text-xs text-primario/60">Edades 0-12</p>
               </div>
               <div class="flex items-center gap-3">
-                <button class="w-8 h-8 rounded-full border border-secundario text-secundario flex items-center justify-center hover:bg-secundario hover:text-white transition" onclick="updateGuests('children', -1)"><i class="fa-solid fa-minus text-xs"></i></button>
+                <button class="w-8 h-8 rounded-full border border-secundario text-secundario flex items-center justify-center hover:bg-secundario hover:text-white transition" onclick="updateGuests('children', -1)"><i class="fa-minus fa-solid text-xs"></i></button>
                 <span id="children-count" class="font-medium w-4 text-center">0</span>
-                <button class="w-8 h-8 rounded-full border border-secundario text-secundario flex items-center justify-center hover:bg-secundario hover:text-white transition" onclick="updateGuests('children', 1)"><i class="fa-solid fa-plus text-xs"></i></button>
+                <button class="w-8 h-8 rounded-full border border-secundario text-secundario flex items-center justify-center hover:bg-secundario hover:text-white transition" onclick="updateGuests('children', 1)"><i class="fa-plus fa-solid text-xs"></i></button>
               </div>
             </div>
           </div>
         </div>
 
-        <button onclick="generateWhatsAppQuery()" class="w-full md:w-auto h-12 bg-whatsapp hover:bg-[#20ba56] text-white font-semibold px-6 rounded-lg shadow-md transition-colors flex items-center justify-center gap-2 whitespace-nowrap mt-4 md:mt-0">
-          <i class="fa-brands fa-whatsapp text-lg"></i> Consultar por WhatsApp
+        <button onclick="initiateGeneralWhatsAppQuery()" class="w-full md:w-auto h-12 bg-whatsapp hover:bg-[#20ba56] text-white font-semibold px-6 rounded-lg shadow-md transition-colors flex items-center justify-center gap-2 whitespace-nowrap mt-4 md:mt-0">
+          <i class="fa-brands fa-whatsapp text-lg"></i> Hablar por WhatsApp
         </button>
       </div>
     </section>
@@ -130,14 +130,14 @@
     <section class="max-w-7xl mx-auto px-4 md:px-8 py-16">
       <h3 class="text-3xl font-bold mb-8">Detalles Pensados para Ti.</h3>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-primario/5"><i class="fa-solid fa-wifi text-secundario text-xl w-6"></i><span class="font-medium">Wi-Fi Alta Velocidad</span></div>
-        <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-primario/5"><i class="fa-solid fa-shower text-secundario text-xl w-6"></i><span class="font-medium">1 Baño Completo</span></div>
-        <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-primario/5"><i class="fa-solid fa-bed text-secundario text-xl w-6"></i><span class="font-medium">2 Habitaciones</span></div>
-        <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-primario/5"><i class="fa-solid fa-kitchen-set text-secundario text-xl w-6"></i><span class="font-medium">Cocina Equipada</span></div>
-        <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-primario/5"><i class="fa-solid fa-tv text-secundario text-xl w-6"></i><span class="font-medium">TV Smart</span></div>
-        <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-primario/5"><i class="fa-solid fa-fan text-secundario text-xl w-6"></i><span class="font-medium">Ventiladores</span></div>
-        <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-primario/5"><i class="fa-solid fa-water-ladder text-secundario text-xl w-6"></i><span class="font-medium">Pileta Exclusiva</span></div>
-        <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-primario/5"><i class="fa-solid fa-car text-secundario text-xl w-6"></i><span class="font-medium">Cochera (1 auto)</span></div>
+        <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-primario/5"><i class="fa-wifi fa-solid text-secundario text-xl w-6"></i><span class="font-medium">Wi-Fi Alta Velocidad</span></div>
+        <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-primario/5"><i class="fa-shower fa-solid text-secundario text-xl w-6"></i><span class="font-medium">1 Baño Completo</span></div>
+        <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-primario/5"><i class="fa-bed fa-solid text-secundario text-xl w-6"></i><span class="font-medium">2 Habitaciones</span></div>
+        <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-primario/5"><i class="fa-kitchen-set fa-solid text-secundario text-xl w-6"></i><span class="font-medium">Cocina Equipada</span></div>
+        <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-primario/5"><i class="fa-tv fa-solid text-secundario text-xl w-6"></i><span class="font-medium">TV Smart</span></div>
+        <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-primario/5"><i class="fa-fan fa-solid text-secundario text-xl w-6"></i><span class="font-medium">Ventiladores</span></div>
+        <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-primario/5"><i class="fa-water-ladder fa-solid text-secundario text-xl w-6"></i><span class="font-medium">Pileta Exclusiva</span></div>
+        <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-primario/5"><i class="fa-car fa-solid text-secundario text-xl w-6"></i><span class="font-medium">Cochera (1 auto)</span></div>
       </div>
     </section>
 
@@ -146,17 +146,17 @@
         <h3 class="text-3xl font-bold mb-10 text-center">La Experiencia, Contada por Nuestros Huéspedes.</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <article class="bg-white/10 p-6 rounded-2xl backdrop-blur-sm border border-white/20">
-            <div class="flex gap-1 text-yellow-400 mb-3"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <div class="flex gap-1 text-yellow-400 mb-3"><i class="fa-star fa-solid"></i><i class="fa-star fa-solid"></i><i class="fa-star fa-solid"></i><i class="fa-star fa-solid"></i><i class="fa-star fa-solid"></i></div>
             <p class="font-light italic mb-4">"El lugar superó nuestras expectativas. La decoración es hermosa, súper limpio y la pileta es increíble para relajarse al atardecer."</p>
             <p class="font-semibold text-secundario">María Laura G.</p>
           </article>
           <article class="bg-white/10 p-6 rounded-2xl backdrop-blur-sm border border-white/20">
-            <div class="flex gap-1 text-yellow-400 mb-3"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <div class="flex gap-1 text-yellow-400 mb-3"><i class="fa-star fa-solid"></i><i class="fa-star fa-solid"></i><i class="fa-star fa-solid"></i><i class="fa-star fa-solid"></i><i class="fa-star fa-solid"></i></div>
             <p class="font-light italic mb-4">"Ubicación inmejorable, cerca de todo pero súper tranquilo de noche. La atención fue excelente desde el primer mensaje de WhatsApp."</p>
             <p class="font-semibold text-secundario">Esteban R.</p>
           </article>
           <article class="bg-white/10 p-6 rounded-2xl backdrop-blur-sm border border-white/20">
-            <div class="flex gap-1 text-yellow-400 mb-3"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <div class="flex gap-1 text-yellow-400 mb-3"><i class="fa-star fa-solid"></i><i class="fa-star fa-solid"></i><i class="fa-star fa-solid"></i><i class="fa-star fa-solid"></i><i class="fa-star fa-solid"></i></div>
             <p class="font-light italic mb-4">"Fuimos con los chicos y estuvimos comodísimos. Las habitaciones son amplias y la cocina tiene de todo. ¡Volveremos seguro!"</p>
             <p class="font-semibold text-secundario">Familia Domínguez</p>
           </article>
@@ -170,10 +170,10 @@
         <div>
           <p class="text-lg mb-6">Ubicado estratégicamente para que disfrutes de la ciudad sin depender del auto, pero en una calle tranquila que garantiza tu descanso.</p>
           <ul class="space-y-4">
-            <li class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-secundario/10 flex items-center justify-center text-secundario"><i class="fa-solid fa-utensils"></i></div><span>A 3 cuadras del Polo Gastronómico</span></li>
-            <li class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-secundario/10 flex items-center justify-center text-secundario"><i class="fa-solid fa-store"></i></div><span>A 5 minutos del Centro Comercial</span></li>
-            <li class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-secundario/10 flex items-center justify-center text-secundario"><i class="fa-solid fa-tree"></i></div><span>A 200m del Parque Principal</span></li>
-            <li class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-secundario/10 flex items-center justify-center text-secundario"><i class="fa-solid fa-bus"></i></div><span>A 10 min de la Terminal</span></li>
+            <li class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-secundario/10 flex items-center justify-center text-secundario"><i class="fa-utensils fa-solid"></i></div><span>A 3 cuadras del Polo Gastronómico</span></li>
+            <li class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-secundario/10 flex items-center justify-center text-secundario"><i class="fa-store fa-solid"></i></div><span>A 5 minutos del Centro Comercial</span></li>
+            <li class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-secundario/10 flex items-center justify-center text-secundario"><i class="fa-tree fa-solid"></i></div><span>A 200m del Parque Principal</span></li>
+            <li class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-secundario/10 flex items-center justify-center text-secundario"><i class="fa-bus fa-solid"></i></div><span>A 10 min de la Terminal</span></li>
           </ul>
         </div>
         <div class="h-80 w-full rounded-2xl overflow-hidden shadow-lg border border-primario/10 bg-gray-200">
@@ -194,9 +194,9 @@
   </a>
 
   <div id="lightbox" class="fixed inset-0 z-[100] bg-black/95 hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
-    <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white/70 hover:text-white text-3xl transition z-50"><i class="fa-solid fa-xmark"></i></button>
-    <button onclick="changeLightboxImage(-1)" class="absolute left-4 md:left-8 text-white/50 hover:text-white text-4xl transition z-50"><i class="fa-solid fa-chevron-left"></i></button>
-    <button onclick="changeLightboxImage(1)" class="absolute right-4 md:right-8 text-white/50 hover:text-white text-4xl transition z-50"><i class="fa-solid fa-chevron-right"></i></button>
+    <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white/70 hover:text-white text-3xl transition z-50"><i class="fa-xmark fa-solid"></i></button>
+    <button onclick="changeLightboxImage(-1)" class="absolute left-4 md:left-8 text-white/50 hover:text-white text-4xl transition z-50"><i class="fa-chevron-left fa-solid"></i></button>
+    <button onclick="changeLightboxImage(1)" class="absolute right-4 md:right-8 text-white/50 hover:text-white text-4xl transition z-50"><i class="fa-chevron-right fa-solid"></i></button>
     <img id="lightbox-img" src="" alt="Imagen ampliada" class="max-w-[90vw] max-h-[90vh] object-contain select-none">
     <div class="absolute bottom-6 text-white/70 tracking-widest text-sm">
       <span id="lightbox-counter">1</span> / <span id="lightbox-total">8</span>
@@ -245,53 +245,24 @@
       guestsSummary.innerText = `${adults} ${textAdults} - ${children} ${textChildren}`;
     }
 
-    // 3. LÓGICA DE MOTOR DE RESERVAS -> WHATSAPP
-    function formatDate(dateStr) {
-      const [year, month, day] = dateStr.split('-');
-      return `${day}/${month}/${year}`;
+    // 3. NUEVA LÓGICA DE WHATSAPP (INICIADOR DE CONVERSACIÓN GENERAL)
+    // El botón ahora simplemente abre el chat con un mensaje de bienvenida general
+    // permitiendo que el mensaje de bienvenida del negocio o los starters rápidos entren en juego.
+    function initiateGeneralWhatsAppQuery() {
+      // Opcionalmente, podemos validar si hay fechas para un mensaje más específico,
+      // pero el requisito visual indica una iniciación general basada en la intención.
+      const greeting = "Hola, quisiera consultar sobre Oasis Boutique";
+      const encodedGreeting = encodeURIComponent(greeting);
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedGreeting}`, '_blank');
     }
 
-    function generateWhatsAppQuery() {
-      const arrVal = document.getElementById('arrival').value;
-      const depVal = document.getElementById('departure').value;
-
-      if (!arrVal || !depVal) {
-        alert('Por favor, selecciona las fechas de llegada y salida para consultar.');
-        if (!arrVal) document.getElementById('arrival').focus();
-        else document.getElementById('departure').focus();
-        return;
-      }
-
-      const arrDate = new Date(arrVal);
-      const depDate = new Date(depVal);
-      
-      const diffTime = depDate - arrDate;
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-      if (diffDays <= 0) {
-        alert('La fecha de salida debe ser posterior a la fecha de llegada.');
-        document.getElementById('departure').focus();
-        return;
-      }
-
-      const strArrival = formatDate(arrVal);
-      const strDeparture = formatDate(depVal);
-
-      const message = `Hola, ¿cómo estás? Me gustaría consultar disponibilidad y tarifa para Oasis Boutique.
-🗓️ Fechas: ${strArrival} → ${strDeparture} (${diffDays} noches)
-👥 Huéspedes: ${adults} adultos · ${children} niños
-¿Podrías confirmarme precio total y forma de reserva? ¡Gracias!`;
-
-      const encodedMessage = encodeURIComponent(message);
-      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`, '_blank');
-    }
-
-    // 4. BOTÓN FLOTANTE WHATSAPP
+    // 4. BOTÓN FLOTANTE WHATSAPP ACTUALIZADO
     function openFloatingWhatsApp(e) {
       e.preventDefault();
-      const message = "¡Hola! Me encantó Oasis Boutique. Quisiera saber si tienen disponibilidad para las fechas del ____ al ____ para ____ personas. ¡Gracias!";
-      const encodedMessage = encodeURIComponent(message);
-      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`, '_blank');
+      // Mismo mensaje general de iniciación para consistencia
+      const greeting = "Hola, quisiera consultar sobre Oasis Boutique";
+      const encodedGreeting = encodeURIComponent(greeting);
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedGreeting}`, '_blank');
     }
 
     // 5. LÓGICA DEL LIGHTBOX
@@ -354,6 +325,7 @@
       }
     });
 
+    // Helper para establecer fechas por defecto
     window.addEventListener('DOMContentLoaded', () => {
       const today = new Date();
       const tomorrow = new Date(today);
