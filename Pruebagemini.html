@@ -121,8 +121,8 @@
           </div>
         </div>
 
-        <button onclick="initiateGeneralWhatsAppQuery()" class="w-full md:w-auto h-12 bg-whatsapp hover:bg-[#20ba56] text-white font-semibold px-6 rounded-lg shadow-md transition-colors flex items-center justify-center gap-2 whitespace-nowrap mt-4 md:mt-0">
-          <i class="fa-brands fa-whatsapp text-lg"></i> Hablar por WhatsApp
+        <button onclick="initiateGeneralWhatsAppQuery(this)" class="w-full md:w-auto h-12 bg-whatsapp hover:bg-[#20ba56] text-white font-semibold px-6 rounded-lg shadow-md transition-all flex items-center justify-center gap-2 whitespace-nowrap mt-4 md:mt-0 min-w-[220px]">
+          <i class="fa-brands fa-whatsapp text-lg"></i> <span>Hablar por WhatsApp</span>
         </button>
       </div>
     </section>
@@ -186,8 +186,8 @@
     </section>
   </main>
 
-  <a href="#" onclick="openFloatingWhatsApp(event)" class="fixed bottom-6 right-6 z-50 bg-whatsapp text-white w-14 h-14 rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(37,211,102,0.4)] hover:scale-110 hover:bg-green-500 transition-all group" aria-label="Chat en WhatsApp">
-    <i class="fa-brands fa-whatsapp text-3xl"></i>
+  <a href="#" onclick="openFloatingWhatsApp(event, this)" class="fixed bottom-6 right-6 z-50 bg-whatsapp text-white w-14 h-14 rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(37,211,102,0.4)] hover:scale-110 hover:bg-green-500 transition-all group" aria-label="Chat en WhatsApp">
+    <i class="fa-brands fa-whatsapp text-3xl transition-transform" id="floating-wa-icon"></i>
     <span class="absolute right-full mr-4 bg-white text-primario text-sm font-medium px-4 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-primario/10">
       ¿Dudas sobre tus fechas? ¡Hablemos!
     </span>
@@ -245,24 +245,61 @@
       guestsSummary.innerText = `${adults} ${textAdults} - ${children} ${textChildren}`;
     }
 
-    // 3. NUEVA LÓGICA DE WHATSAPP (INICIADOR DE CONVERSACIÓN GENERAL)
-    // El botón ahora simplemente abre el chat con un mensaje de bienvenida general
-    // permitiendo que el mensaje de bienvenida del negocio o los starters rápidos entren en juego.
-    function initiateGeneralWhatsAppQuery() {
-      // Opcionalmente, podemos validar si hay fechas para un mensaje más específico,
-      // pero el requisito visual indica una iniciación general basada en la intención.
-      const greeting = "Hola, quisiera consultar sobre Oasis Boutique";
-      const encodedGreeting = encodeURIComponent(greeting);
-      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedGreeting}`, '_blank');
+    // 3. NUEVA LÓGICA DE WHATSAPP (CON EFECTO LATENCIA)
+    function initiateGeneralWhatsAppQuery(buttonElement) {
+      // Evitar múltiples clics
+      if (buttonElement.disabled) return;
+      
+      // Guardar estado original
+      const originalHTML = buttonElement.innerHTML;
+      
+      // Cambiar a estado de carga (Latencia)
+      buttonElement.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-lg"></i> <span>Conectando...</span>`;
+      buttonElement.disabled = true;
+      buttonElement.classList.add('opacity-80', 'cursor-not-allowed');
+      buttonElement.classList.remove('hover:bg-[#20ba56]');
+
+      // Simular tiempo de carga (1.5 segundos) y luego redirigir
+      setTimeout(() => {
+        const greeting = "Hola, quisiera consultar sobre Oasis Boutique";
+        const encodedGreeting = encodeURIComponent(greeting);
+        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedGreeting}`, '_blank');
+        
+        // Restaurar botón a su estado original después de abrir la pestaña
+        setTimeout(() => {
+          buttonElement.innerHTML = originalHTML;
+          buttonElement.disabled = false;
+          buttonElement.classList.remove('opacity-80', 'cursor-not-allowed');
+          buttonElement.classList.add('hover:bg-[#20ba56]');
+        }, 500);
+
+      }, 1500);
     }
 
-    // 4. BOTÓN FLOTANTE WHATSAPP ACTUALIZADO
-    function openFloatingWhatsApp(e) {
+    // 4. BOTÓN FLOTANTE WHATSAPP (CON LATENCIA)
+    function openFloatingWhatsApp(e, linkElement) {
       e.preventDefault();
-      // Mismo mensaje general de iniciación para consistencia
-      const greeting = "Hola, quisiera consultar sobre Oasis Boutique";
-      const encodedGreeting = encodeURIComponent(greeting);
-      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedGreeting}`, '_blank');
+      
+      if (linkElement.classList.contains('pointer-events-none')) return;
+
+      const icon = document.getElementById('floating-wa-icon');
+      
+      // Estado de carga
+      icon.className = "fa-solid fa-circle-notch fa-spin text-3xl";
+      linkElement.classList.add('pointer-events-none', 'opacity-90');
+
+      setTimeout(() => {
+        const greeting = "Hola, quisiera consultar sobre Oasis Boutique";
+        const encodedGreeting = encodeURIComponent(greeting);
+        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedGreeting}`, '_blank');
+        
+        // Restaurar estado
+        setTimeout(() => {
+          icon.className = "fa-brands fa-whatsapp text-3xl transition-transform";
+          linkElement.classList.remove('pointer-events-none', 'opacity-90');
+        }, 500);
+
+      }, 1000); // Latencia un poco más corta para el flotante
     }
 
     // 5. LÓGICA DEL LIGHTBOX
@@ -325,7 +362,6 @@
       }
     });
 
-    // Helper para establecer fechas por defecto
     window.addEventListener('DOMContentLoaded', () => {
       const today = new Date();
       const tomorrow = new Date(today);
